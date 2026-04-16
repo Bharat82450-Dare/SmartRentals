@@ -517,5 +517,5 @@ def update_complaint_status(cid):
 
 
 if __name__ == '__main__':
-    print('Starting smartRentals Management System Server...')
+    print('Starting SmartRentals Management System Server...')
     app.run(debug=True, host='0.0.0.0', port=5000)
