@@ -7,11 +7,53 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        :root { --accent: #FF5F38; --accent-glow: rgba(255,95,56,0.4); --panel-bg: rgba(255,255,255,0.97); --border: rgba(255,255,255,0.15); --border-input: #e8eaf0; }
+        :root {
+            --accent: #ADAE5D;
+            --accent-glow: rgba(173, 174, 93, 0.4);
+            --panel-bg: #2c3a3b;
+            --border: rgba(255, 255, 255, 0.05);
+            --border-input: #3a4d4e;
+            --bg: #1d1e18;
+            --text: #f1f2e9;
+            --transition-speed: 0.3s;
+        }
+
+        body.bright-theme {
+            --bg:          #CFCEBA;   /* 60% Base */
+            --panel-bg:    #84A3A5;   /* 30% Secondary */
+            --border:      rgba(0,0,0,0.06);
+            --border-input: rgba(0,0,0,0.1);
+            --text:        #252621;   /* High Contrast Dark */
+            --accent:      #ADAE5D;   /* 10% Accent */
+        }
+
+        body.bright-theme .main-header { background: rgba(132, 163, 165, 0.95); }
+        body.bright-theme .panel { background: var(--panel-bg); }
+        body.bright-theme .form-control, body.bright-theme .note-input { background: #CFCEBA; color: #252621; }
+        body.bright-theme .complaint-card { background: #fdfef9; border-color: rgba(0,0,0,0.08); }
+        body.bright-theme .complaint-header h3 { color: #252621; }
+        body.bright-theme .complaint-body { color: #4a4c42; }
+        body.bright-theme .panel h2 { color: #f1f2e9; } 
+        body.bright-theme .staff-badge { color: #f1f2e9; }
+
+        body { transition: background-color var(--transition-speed), color var(--transition-speed); }
+        .panel, .complaint-card, .form-control, .note-input, .main-header { transition: all var(--transition-speed); }
+
+        .theme-toggle {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .theme-toggle:hover { color: #fff; background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .theme-toggle .fa-sun { display: none; }
+        body.bright-theme .theme-toggle .fa-moon { display: none; }
+        body.bright-theme .theme-toggle .fa-sun { display: block; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%); min-height: 100vh; color: #1a1a2e; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
         a { text-decoration: none; color: inherit; }
-        .main-header { background: rgba(8,6,28,0.88); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
+        .main-header { background: rgba(29, 30, 24, 0.88); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
         .page-container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
         .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
@@ -22,26 +64,26 @@
         .page-wrapper { padding: 40px 24px 60px; max-width: 1000px; margin: 0 auto; }
         .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
         .page-title span { color: var(--accent); }
-        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
-        .panel h2 { font-size: 1.15rem; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
+        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
+        .panel h2 { font-size: 1.15rem; font-weight: 700; color: #f1f2e9; margin-bottom: 20px; }
         .complaints-list { display: flex; flex-direction: column; gap: 16px; }
-        .complaint-card { border: 1px solid #edf0f7; border-radius: 12px; padding: 20px; background: #fff; border-left: 4px solid #e8eaf0; }
-        .complaint-card.open { border-left-color: #ef4444; }
-        .complaint-card.in-progress { border-left-color: #f59e0b; }
-        .complaint-card.resolved { border-left-color: #10b981; opacity: 0.8; }
+        .complaint-card { border: 1px solid var(--border-input); border-radius: 12px; padding: 20px; background: #3a4d4e; border-left: 4px solid #84a3a5; }
+        .complaint-card.open { border-left-color: #f87171; }
+        .complaint-card.in-progress { border-left-color: #fca5a5; }
+        .complaint-card.resolved { border-left-color: #adae5d; opacity: 0.8; }
         .complaint-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
-        .complaint-header h3 { font-size: 1rem; font-weight: 700; color: #1a1a2e; }
+        .complaint-header h3 { font-size: 1rem; font-weight: 700; color: #f1f2e9; }
         .meta { display: flex; gap: 8px; flex-wrap: wrap; }
         .category-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.74rem; font-weight: 600; background: #ede9fe; color: #5b21b6; }
         .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .pill-open { background: #fee2e2; color: #b91c1c; }
         .pill-in-progress { background: #fef3c7; color: #92400e; }
         .pill-resolved { background: #d1fae5; color: #065f46; }
-        .complaint-body { font-size: 0.88rem; color: #555; line-height: 1.6; margin-bottom: 14px; }
+        .complaint-body { font-size: 0.88rem; color: rgba(241, 242, 233, 0.7); line-height: 1.6; margin-bottom: 14px; }
         .complaint-footer { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
         .complaint-info { font-size: 0.78rem; color: #999; }
         .action-area { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
-        .note-input { padding: 8px 12px; border: 2px solid #e8eaf0; border-radius: 8px; font-family: inherit; font-size: 0.85rem; width: 260px; }
+        .note-input { padding: 8px 12px; border: 2px solid var(--border-input); border-radius: 8px; font-family: inherit; font-size: 0.85rem; width: 260px; background: #1d1e18; color: #f1f2e9; }
         .note-input:focus { outline: none; border-color: var(--accent); }
         .btn { padding: 7px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all 0.25s; font-size: 0.82rem; }
         .btn-wip { background: linear-gradient(135deg, #f59e0b, #fcd34d); color: #78350f; }
@@ -56,6 +98,10 @@
         <div class="page-container">
             <a href="/staff/dashboard" class="logo">smart<span>Rentals</span></a>
             <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
                 <span class="staff-badge"><i class="fas fa-hard-hat"></i> {{ staff.name }}</span>
                 <a href="/staff/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
@@ -131,6 +177,17 @@
                 else alert('Failed to update.');
             } catch (err) { alert('Error occurred.'); }
         }
+        // ── Theme Logic ──────────────────────────────────────────
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        const savedTheme = localStorage.getItem('sr-theme') || 'dark';
+        if (savedTheme === 'bright') body.classList.add('bright-theme');
+
+        themeToggle.addEventListener('click', () => {
+            const isBright = body.classList.toggle('bright-theme');
+            localStorage.setItem('sr-theme', isBright ? 'bright' : 'dark');
+        });
     </script>
 </body>
 </html>

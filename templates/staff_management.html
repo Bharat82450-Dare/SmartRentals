@@ -7,11 +7,53 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        :root { --accent: #FF5F38; --accent-glow: rgba(255,95,56,0.4); --panel-bg: rgba(255,255,255,0.97); --border: rgba(255,255,255,0.15); --border-input: #e8eaf0; }
+        :root {
+            --accent: #ADAE5D;
+            --accent-glow: rgba(173, 174, 93, 0.4);
+            --panel-bg: #2c3a3b;
+            --border: rgba(255, 255, 255, 0.05);
+            --border-input: #3a4d4e;
+            --bg: #1d1e18;
+            --text: #f1f2e9;
+            --transition-speed: 0.3s;
+        }
+
+        body.bright-theme {
+            --bg:          #CFCEBA;   /* 60% Base */
+            --panel-bg:    #84A3A5;   /* 30% Secondary */
+            --border:      rgba(0,0,0,0.06);
+            --border-input: rgba(0,0,0,0.1);
+            --text:        #252621;   /* High Contrast Dark */
+            --accent:      #ADAE5D;   /* 10% Accent */
+        }
+
+        body.bright-theme .main-header { background: rgba(132, 163, 165, 0.95); }
+        body.bright-theme .panel { background: var(--panel-bg); }
+        body.bright-theme .form-control { background: #CFCEBA; color: #252621; }
+        body.bright-theme .staff-card { background: #fdfef9; border-color: rgba(0,0,0,0.08); }
+        body.bright-theme .staff-card h3 { color: #252621; }
+        body.bright-theme .staff-card p { color: #4a4c42; }
+        body.bright-theme .panel h2 { color: #f1f2e9; } 
+        body.bright-theme .form-group label { color: #f1f2e9; }
+
+        body { transition: background-color var(--transition-speed), color var(--transition-speed); transition-delay: 0s; }
+        .panel, .staff-card, .form-control, .main-header { transition: all var(--transition-speed); }
+
+        .theme-toggle {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; transition: all 0.2s; margin-right: 15px;
+        }
+        .theme-toggle:hover { color: #fff; background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .theme-toggle .fa-sun { display: none; }
+        body.bright-theme .theme-toggle .fa-moon { display: none; }
+        body.bright-theme .theme-toggle .fa-sun { display: block; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%); min-height: 100vh; color: #1a1a2e; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
         a { text-decoration: none; color: inherit; }
-        .main-header { background: rgba(8,6,28,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
+        .main-header { background: rgba(29, 30, 24, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
         .page-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
         .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
@@ -24,14 +66,14 @@
         .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
         .page-title span { color: var(--accent); }
         .layout { display: flex; gap: 24px; align-items: flex-start; }
-        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
+        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
         .form-panel { flex: 0 0 320px; }
         .list-panel { flex: 1; min-width: 0; animation-delay: 0.1s; }
-        .panel h2 { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 22px; }
+        .panel h2 { font-size: 1.2rem; font-weight: 700; color: #f1f2e9; margin-bottom: 22px; }
         .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: #555; }
-        .form-control { width: 100%; padding: 10px 14px; border: 2px solid var(--border-input); border-radius: 8px; font-family: inherit; font-size: 0.93rem; transition: border-color 0.2s; background: #fafbfc; color: #1a1a2e; }
-        .form-control:focus { outline: none; border-color: var(--accent); background: #fff; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: rgba(241, 242, 233, 0.7); }
+        .form-control { width: 100%; padding: 10px 14px; border: 2px solid var(--border-input); border-radius: 8px; font-family: inherit; font-size: 0.93rem; transition: border-color 0.2s; background: #1d1e18; color: #f1f2e9; }
+        .form-control:focus { outline: none; border-color: var(--accent); background: #2c3a3b; }
         .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all 0.25s; }
         .btn-primary { background: linear-gradient(135deg, var(--accent), #ff8a65); color: white; box-shadow: 0 4px 15px var(--accent-glow); width: 100%; }
         .btn-primary:hover { transform: translateY(-2px); }
@@ -39,12 +81,12 @@
         .btn-danger:hover { transform: translateY(-2px); }
         .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
         .staff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 4px; }
-        .staff-card { border: 1px solid #edf0f7; border-radius: 12px; padding: 20px; background: #fff; border-top: 4px solid #764ba2; transition: all 0.25s; }
-        .staff-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.1); }
+        .staff-card { border: 1px solid var(--border-input); border-radius: 12px; padding: 20px; background: #3a4d4e; border-top: 4px solid var(--accent); transition: all 0.25s; }
+        .staff-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
         .staff-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; }
-        .staff-card h3 { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
-        .staff-card p { font-size: 0.85rem; color: #666; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        .staff-card p i { color: #764ba2; width: 14px; }
+        .staff-card h3 { font-size: 1rem; font-weight: 700; color: #f1f2e9; margin-bottom: 8px; }
+        .staff-card p { font-size: 0.85rem; color: rgba(241, 242, 233, 0.7); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .staff-card p i { color: var(--accent); width: 14px; }
         .card-actions { margin-top: 14px; display: flex; justify-content: flex-end; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 900px) { .layout { flex-direction: column; } .form-panel { flex: none; width: 100%; } }
@@ -64,6 +106,12 @@
                     <li><a href="/payments">Payments</a></li>
                     <li><a href="/complaints">Complaints</a></li>
                     <li><a href="/admin/staff" class="active">Staff</a></li>
+                    <li style="display:flex; align-items:center; margin-left:10px;">
+                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                            <i class="fas fa-moon"></i>
+                            <i class="fas fa-sun"></i>
+                        </button>
+                    </li>
                     <li><a href="/logout" class="btn-logout" style="display:inline-block;padding:7px 16px;">Logout</a></li>
                 </ul>
             </nav>
@@ -171,6 +219,17 @@
                 else alert('Failed to remove staff member.');
             } catch (err) { alert('Error occurred.'); }
         }
+        // ── Theme Logic ──────────────────────────────────────────
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        const savedTheme = localStorage.getItem('sr-theme') || 'dark';
+        if (savedTheme === 'bright') body.classList.add('bright-theme');
+
+        themeToggle.addEventListener('click', () => {
+            const isBright = body.classList.toggle('bright-theme');
+            localStorage.setItem('sr-theme', isBright ? 'bright' : 'dark');
+        });
     </script>
 </body>
 </html>

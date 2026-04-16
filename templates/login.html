@@ -21,7 +21,7 @@
         .container {
             position: relative;
             width: 100%;
-            background-color: #fff;
+            background-color: #CFCEBA;
             min-height: 100vh;
             overflow: hidden;
         }
@@ -71,6 +71,13 @@
             font-size: 2.2rem;
             color: #1a2b3c;
             margin-bottom: 10px;
+            /* subtle entrance animation */
+            animation: titleFadeIn 0.6s ease both;
+        }
+
+        @keyframes titleFadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .input-field {
@@ -84,14 +91,27 @@
             grid-template-columns: 15% 85%;
             padding: 0 0.4rem;
             position: relative;
+            /* smooth focus border */
+            border: 2px solid transparent;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .input-field:focus-within {
+            border-color: #ADAE5D;
+            box-shadow: 0 0 0 4px rgba(173, 174, 93, 0.12);
+            background-color: #fff;
         }
 
         .input-field i {
             text-align: center;
             line-height: 55px;
             color: #acacac;
-            transition: 0.5s;
+            transition: color 0.25s;
             font-size: 1.1rem;
+        }
+
+        .input-field:focus-within i {
+            color: #ADAE5D;
         }
 
         .input-field input {
@@ -119,7 +139,7 @@
 
         .btn {
             width: 150px;
-            background-color: #FF5F38;
+            background-color: #ADAE5D;
             border: none;
             outline: none;
             height: 49px;
@@ -129,16 +149,25 @@
             font-weight: 600;
             margin: 10px 0;
             cursor: pointer;
-            transition: 0.5s;
+            transition: all 0.3s;
+            letter-spacing: 0.04em;
         }
 
         .btn:hover {
-            background-color: #e04b2a;
+            background-color: #98994a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(173, 174, 93, 0.35);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn:disabled:hover {
@@ -163,7 +192,7 @@
             top: -10%;
             right: 48%;
             transform: translateY(-50%);
-            background-image: linear-gradient(-45deg, #1a2b3c 0%, #2c3e50 100%);
+            background-image: linear-gradient(-45deg, #84A3A5 0%, #2c3a3b 100%);
             transition: 1.8s ease-in-out;
             border-radius: 50%;
             z-index: 6;
@@ -217,7 +246,9 @@
         }
 
         .btn.transparent:hover {
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
         }
 
         .right-panel .content {
@@ -386,6 +417,11 @@
             text-align: center;
             max-width: 380px;
         }
+
+        /* Success tint on the error element */
+        .error-message.success {
+            color: #22c55e;
+        }
     </style>
 </head>
 <body>
@@ -434,14 +470,14 @@
             <div class="panel left-panel">
                 <div class="content">
                     <h3>New here?</h3>
-                        Digitally manage your tenants, properties, agreements, and rent payments in one place.
+                    <p>Digitally manage your tenants, properties, agreements, and rent payments in one place.</p>
                     <button class="btn transparent" id="sign-up-btn-toggle">Sign up</button>
                 </div>
             </div>
             <div class="panel right-panel">
                 <div class="content">
                     <h3>Already have an account?</h3>
-                        Login to manage your residential rental business efficiently.
+                    <p>Login to manage your residential rental business efficiently.</p>
                     <button class="btn transparent" id="sign-in-btn-toggle">Sign in</button>
                 </div>
             </div>
@@ -504,6 +540,7 @@
             
             const errorElement = document.getElementById('login-error');
             errorElement.textContent = '';
+            errorElement.className = 'error-message';
             
             // Client-side validation
             if (!formData.username || !formData.password) {
@@ -534,7 +571,6 @@
                 }
 
                 if (data.success) {
-                    // Redirect to dashboard
                     window.location.href = data.redirect || '/dashboard';
                 } else {
                     throw new Error(data.error || 'Login failed');
@@ -567,8 +603,8 @@
             
             const errorElement = document.getElementById('signup-error');
             errorElement.textContent = '';
+            errorElement.className = 'error-message';
             
-            // Client-side validation
             if (!formData.username || !formData.email || !formData.password) {
                 errorElement.textContent = 'Please fill in all fields';
                 return;
@@ -611,11 +647,12 @@
                 }
 
                 if (data.success) {
-                    // Switch to sign-in form and pre-fill credentials
                     container.classList.remove("sign-up-mode");
                     document.getElementById('signin-username').value = formData.username;
                     document.getElementById('signin-password').value = formData.password;
-                    document.getElementById('login-error').textContent = data.message || 'Registration successful! Please sign in.';
+                    const loginErr = document.getElementById('login-error');
+                    loginErr.textContent = data.message || 'Registration successful! Please sign in.';
+                    loginErr.className = 'error-message success';
                 } else {
                     throw new Error(data.error || 'Registration failed');
                 }

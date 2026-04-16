@@ -1,20 +1,29 @@
 :root {
-  --primary: #4361ee;
-  --primary-dark: #3a0ca3;
-  --text: #2b2d42;
-  --text-light: #6c757d;
-  --border: #e0e0e0;
-  --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  --transition: all 0.3s ease;
+  /* 60-30-10 Palette (Light) */
+  --primary-60: #CFCEBA;
+  --secondary-30: #84A3A5;
+  --accent-10: #ADAE5D;
+  
+  /* Derived Dark Palette */
+  --bg-dark: #1d1e18;
+  --surface-dark: #2c3a3b;
+  
+  /* Functional Colors */
+  --text-main: #252621;
+  --text-muted: #5e6154;
+  --text-light: #f1f2e9;
+  --border: rgba(132, 163, 165, 0.3);
+  --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f9fa;
-  color: var(--text);
+  font-family: 'Outfit', 'Inter', sans-serif;
+  background-color: var(--primary-60);
+  color: var(--text-main);
   line-height: 1.6;
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
 .container {
@@ -27,33 +36,36 @@ body {
 }
 
 .header {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  padding: 30px;
+  background: var(--secondary-30);
+  color: var(--text-light);
+  padding: 40px 30px;
   text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 .main-content {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
-  gap: 20px;
-  padding: 25px;
+  gap: 30px;
+  padding: 40px;
 }
 
 .panel {
   background: white;
-  border-radius: 10px;
+  border-radius: 16px;
   box-shadow: var(--card-shadow);
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: 1px solid var(--border);
 }
 
 .section-title {
-  color: var(--primary);
+  color: var(--secondary-30);
+  font-weight: 700;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 /* Society List Styles */
@@ -76,7 +88,7 @@ body {
 }
 
 .society-item:hover {
-  background-color: rgba(67, 97, 238, 0.05);
+  background-color: rgba(132, 163, 165, 0.1);
 }
 
 /* Popup Styles */
@@ -177,7 +189,7 @@ body {
   height: 20px;
   border: 3px solid rgba(0,0,0,0.1);
   border-radius: 50%;
-  border-top-color: var(--primary);
+  border-top-color: var(--accent-10);
   animation: spin 1s linear infinite;
 }
 

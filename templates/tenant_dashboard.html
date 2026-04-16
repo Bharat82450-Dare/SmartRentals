@@ -7,11 +7,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        :root { --accent: #FF5F38; --accent-glow: rgba(255,95,56,0.4); --panel-bg: rgba(255,255,255,0.97); --border: rgba(255,255,255,0.15); --border-input: #e8eaf0; }
+        :root {
+            --accent: #ADAE5D;
+            --accent-glow: rgba(173, 174, 93, 0.4);
+            --panel-bg: #2c3a3b;
+            --border: rgba(255, 255, 255, 0.05);
+            --border-input: #3a4d4e;
+            --bg: #1d1e18;
+            --text: #f1f2e9;
+            --transition-speed: 0.3s;
+        }
+
+        body.bright-theme {
+            --bg:          #CFCEBA;   /* 60% Base */
+            --panel-bg:    #84A3A5;   /* 30% Secondary */
+            --border:      rgba(0,0,0,0.06);
+            --border-input: rgba(0,0,0,0.1);
+            --text:        #252621;   /* High Contrast Dark */
+            --accent:      #ADAE5D;   /* 10% Accent */
+        }
+
+        body.bright-theme .main-header { background: rgba(132, 163, 165, 0.95); }
+        body.bright-theme .panel { background: var(--panel-bg); }
+        body.bright-theme .form-control { background: #CFCEBA; color: #252621; }
+        body.bright-theme .panel h2 { color: #f1f2e9; } 
+        body.bright-theme .info-row { border-bottom-color: rgba(0,0,0,0.1); color: #252621; }
+        body.bright-theme .info-label { color: rgba(0,0,0,0.5); }
+        body.bright-theme .info-value { color: #252621; }
+        body.bright-theme th { background: #CFCEBA; color: #252621; border-bottom-color: rgba(0,0,0,0.1); }
+        body.bright-theme td { background: #fdfef9; color: #4a4c42; border-bottom-color: rgba(0,0,0,0.05); }
+        body.bright-theme tbody tr:hover td { background: #ffffff; }
+
+        body { transition: background-color var(--transition-speed), color var(--transition-speed); transition-delay: 0s; }
+        .panel, .form-control, .main-header, table, th, td { transition: all var(--transition-speed); }
+
+        .theme-toggle {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .theme-toggle:hover { color: #fff; background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .theme-toggle .fa-sun { display: none; }
+        body.bright-theme .theme-toggle .fa-moon { display: none; }
+        body.bright-theme .theme-toggle .fa-sun { display: block; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%); min-height: 100vh; color: #1a1a2e; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
         a { text-decoration: none; color: inherit; }
-        .main-header { background: rgba(8,6,28,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
+        .main-header { background: rgba(29, 30, 24, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
         .page-container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
         .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
@@ -23,26 +67,26 @@
         .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
         .page-title span { color: var(--accent); }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
+        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
         .panel.full { grid-column: 1 / -1; }
-        .panel h2 { font-size: 1.15rem; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
-        .info-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f3f9; font-size: 0.9rem; color: #444; }
+        .panel h2 { font-size: 1.15rem; font-weight: 700; color: #f1f2e9; margin-bottom: 20px; }
+        .info-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border-input); font-size: 0.9rem; color: rgba(241, 242, 233, 0.7); }
         .info-row:last-child { border-bottom: none; }
         .info-row i { color: var(--accent); width: 18px; }
-        .info-label { color: #888; font-size: 0.82rem; width: 120px; flex-shrink: 0; }
-        .info-value { font-weight: 600; color: #1a1a2e; }
+        .info-label { color: rgba(241, 242, 233, 0.4); font-size: 0.82rem; width: 120px; flex-shrink: 0; }
+        .info-value { font-weight: 600; color: #f1f2e9; }
         .status-active { display: inline-block; padding: 3px 10px; border-radius: 20px; background: #d1fae5; color: #065f46; font-size: 0.76rem; font-weight: 700; }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #f8f9ff; color: #1a1a2e; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border-bottom: 2px solid #edf0f7; }
-        td { padding: 11px 12px; border-bottom: 1px solid #f1f3f9; font-size: 0.88rem; color: #444; }
-        tbody tr:hover { background: #fafbff; }
-        .amount-cell { font-weight: 700; color: #065f46; }
+        th { background: #1d1e18; color: #f1f2e9; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border-bottom: 2px solid var(--border-input); }
+        td { padding: 11px 12px; border-bottom: 1px solid var(--border-input); font-size: 0.88rem; color: rgba(241, 242, 233, 0.7); }
+        tbody tr:hover { background: #3a4d4e; }
+        .amount-cell { font-weight: 700; color: #adae5d; }
         .mode-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: #ede9fe; color: #5b21b6; }
         .btn-receipt { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 10px; font-size: 0.78rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; font-weight: 600; }
         .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: #555; }
-        .form-control { width: 100%; padding: 10px 14px; border: 2px solid var(--border-input); border-radius: 8px; font-family: inherit; font-size: 0.93rem; transition: border-color 0.2s; background: #fafbfc; color: #1a1a2e; }
-        .form-control:focus { outline: none; border-color: var(--accent); background: #fff; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: rgba(241, 242, 233, 0.7); }
+        .form-control { width: 100%; padding: 10px 14px; border: 2px solid var(--border-input); border-radius: 8px; font-family: inherit; font-size: 0.93rem; transition: border-color 0.2s; background: #1d1e18; color: #f1f2e9; }
+        .form-control:focus { outline: none; border-color: var(--accent); background: #2c3a3b; }
         textarea.form-control { resize: vertical; min-height: 90px; }
         .btn-primary { background: linear-gradient(135deg, var(--accent), #ff8a65); color: white; box-shadow: 0 4px 15px var(--accent-glow); border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.25s; }
         .btn-primary:hover { transform: translateY(-2px); }
@@ -60,6 +104,10 @@
         <div class="page-container">
             <a href="/tenant/dashboard" class="logo">smart<span>Rentals</span></a>
             <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
                 <span class="tenant-name-badge"><i class="fas fa-user-circle"></i> {{ tenant.name }}</span>
                 <a href="/tenant/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
@@ -195,6 +243,17 @@
                 if (result.success) { alert('Complaint submitted!'); window.location.reload(); }
                 else alert('Error: ' + result.error);
             } catch (err) { alert('Something went wrong!'); }
+        });
+        // ── Theme Logic ──────────────────────────────────────────
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        const savedTheme = localStorage.getItem('sr-theme') || 'dark';
+        if (savedTheme === 'bright') body.classList.add('bright-theme');
+
+        themeToggle.addEventListener('click', () => {
+            const isBright = body.classList.toggle('bright-theme');
+            localStorage.setItem('sr-theme', isBright ? 'bright' : 'dark');
         });
     </script>
 </body>
