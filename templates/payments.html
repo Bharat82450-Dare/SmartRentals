@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payments | smartRentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root {
+            --accent: #FF5F38;
+            --accent-hover: #e04b2a;
+            --accent-glow: rgba(255, 95, 56, 0.4);
+            --panel-bg: rgba(255, 255, 255, 0.97);
+            --border: rgba(255, 255, 255, 0.15);
+            --border-input: #e8eaf0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%);
+            min-height: 100vh; color: #1a1a2e;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        .main-header {
+            background: rgba(8, 6, 28, 0.88);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0; position: sticky; top: 0; z-index: 1000;
+        }
+        .page-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
+        .logo span { color: var(--accent); }
+        .main-nav ul { list-style: none; display: flex; gap: 4px; align-items: center; }
+        .main-nav a {
+            color: rgba(255,255,255,0.75); font-weight: 500; font-size: 0.9rem;
+            padding: 6px 12px; border-radius: 6px; transition: all 0.2s;
+        }
+        .main-nav a:hover, .main-nav a.active { color: #fff; background: rgba(255,255,255,0.1); }
+        .btn-logout {
+            background: linear-gradient(135deg, var(--accent), #ff8a65) !important;
+            color: white !important; border-radius: 8px !important;
+            box-shadow: 0 4px 12px var(--accent-glow); font-weight: 600 !important;
+        }
+
+        .page-wrapper { padding: 40px 24px 60px; max-width: 1280px; margin: 0 auto; }
+        .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
+        .page-title span { color: var(--accent); }
+
+        .layout { display: flex; gap: 24px; align-items: flex-start; }
+
+        .panel {
+            background: var(--panel-bg); border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+            padding: 28px; animation: fadeInUp 0.5s ease both;
+        }
+        .form-panel { flex: 0 0 340px; }
+        .list-panel { flex: 1; min-width: 0; animation-delay: 0.1s; }
+
+        .panel h2 { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 22px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: #555; }
+        .form-control {
+            width: 100%; padding: 10px 14px; border: 2px solid var(--border-input);
+            border-radius: 8px; font-family: inherit; font-size: 0.93rem;
+            transition: border-color 0.2s; background: #fafbfc; color: #1a1a2e;
+        }
+        .form-control:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; border: none; font-family: inherit; transition: all 0.25s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #ff8a65);
+            color: white; box-shadow: 0 4px 15px var(--accent-glow); width: 100%;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+        .btn-receipt {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; box-shadow: 0 3px 10px rgba(102,126,234,0.35);
+            padding: 5px 12px; font-size: 0.8rem; border-radius: 6px;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .btn-receipt:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(102,126,234,0.45); }
+
+        /* Table */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        th {
+            background: #f8f9ff; color: #1a1a2e; font-weight: 600; font-size: 0.82rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 12px 14px; text-align: left; border-bottom: 2px solid #edf0f7;
+        }
+        td { padding: 13px 14px; border-bottom: 1px solid #f1f3f9; font-size: 0.9rem; color: #444; }
+        tbody tr:hover { background: #fafbff; }
+        .amount-cell { font-weight: 700; color: #065f46; }
+        .mode-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 12px;
+            font-size: 0.75rem; font-weight: 600; background: #ede9fe; color: #5b21b6;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            .form-panel { flex: none; width: 100%; }
+        }
+        @media (max-width: 768px) {
+            .main-nav a { font-size: 0.78rem; padding: 5px 7px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="page-container">
+            <a href="/dashboard" class="logo">smart<span>Rentals</span></a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/properties">Properties</a></li>
+                    <li><a href="/tenants">Tenants</a></li>
+                    <li><a href="/agreements">Agreements</a></li>
+                    <li><a href="/payments" class="active">Payments</a></li>
+                    <li><a href="/complaints">Complaints</a></li>
+                    <li><a href="/logout" class="btn-logout" style="display:inline-block;padding:7px 16px;">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <h1 class="page-title"><i class="fas fa-file-invoice-dollar"></i> Rent <span>Payments</span></h1>
+        <div class="layout">
+            <div class="panel form-panel">
+                <h2><i class="fas fa-plus-circle" style="color:var(--accent)"></i> Record Payment</h2>
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label>Agreement</label>
+                        <select id="agreement" class="form-control" required onchange="updateRent()">
+                            <option value="" data-rent="">— Select Agreement —</option>
+                            {% for a in agreements %}
+                            <option value="{{ a.id }}" data-rent="{{ a.rent }}">{{ a.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Month</label>
+                        <input type="month" id="month" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (₹)</label>
+                        <input type="number" id="amount" class="form-control" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Mode</label>
+                        <select id="mode" class="form-control">
+                            <option value="UPI">UPI</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Record Payment</button>
+                </form>
+            </div>
+
+            <div class="panel list-panel">
+                <h2><i class="fas fa-history" style="color:var(--accent)"></i> Payment History</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Tenant &amp; Property</th>
+                                <th>Month</th>
+                                <th>Mode</th>
+                                <th>Amount</th>
+                                <th>Receipt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in payments %}
+                            <tr>
+                                <td>{{ p.payment_date[:10] }}</td>
+                                <td>{{ p.agreement_label }}</td>
+                                <td>{{ p.month }}</td>
+                                <td><span class="mode-badge">{{ p.mode }}</span></td>
+                                <td class="amount-cell">₹{{ p.amount | int }}</td>
+                                <td>
+                                    <a href="/api/payments/{{ p.id }}/receipt" target="_blank" class="btn btn-receipt">
+                                        <i class="fas fa-print"></i> Print
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" style="text-align:center;color:#999;padding:24px;">
+                                    No payments recorded yet.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+            return match ? decodeURIComponent(match.split('=')[1]) : null;
+        }
+
+        function updateRent() {
+            const sel = document.getElementById('agreement');
+            const rent = sel.options[sel.selectedIndex].getAttribute('data-rent');
+            if (rent) document.getElementById('amount').value = rent;
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const sel = document.getElementById('agreement');
+            const data = {
+                agreement_id: sel.value,
+                agreement_label: sel.options[sel.selectedIndex].text,
+                month: document.getElementById('month').value,
+                amount: document.getElementById('amount').value,
+                mode: document.getElementById('mode').value
+            };
+            try {
+                const res = await fetch('/api/payments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrf_token') },
+                    body: JSON.stringify(data)
+                });
+                if ((await res.json()).success) window.location.reload();
+                else alert('Failed to record payment.');
+            } catch (err) { alert('Something went wrong!'); }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agreements | smartRentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root {
+            --accent: #FF5F38;
+            --accent-hover: #e04b2a;
+            --accent-glow: rgba(255, 95, 56, 0.4);
+            --panel-bg: rgba(255, 255, 255, 0.97);
+            --border: rgba(255, 255, 255, 0.15);
+            --border-input: #e8eaf0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%);
+            min-height: 100vh; color: #1a1a2e;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        .main-header {
+            background: rgba(8, 6, 28, 0.88);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0; position: sticky; top: 0; z-index: 1000;
+        }
+        .page-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
+        .logo span { color: var(--accent); }
+        .main-nav ul { list-style: none; display: flex; gap: 4px; align-items: center; }
+        .main-nav a {
+            color: rgba(255,255,255,0.75); font-weight: 500; font-size: 0.9rem;
+            padding: 6px 12px; border-radius: 6px; transition: all 0.2s;
+        }
+        .main-nav a:hover, .main-nav a.active { color: #fff; background: rgba(255,255,255,0.1); }
+        .btn-logout {
+            background: linear-gradient(135deg, var(--accent), #ff8a65) !important;
+            color: white !important; border-radius: 8px !important;
+            box-shadow: 0 4px 12px var(--accent-glow); font-weight: 600 !important;
+        }
+
+        .page-wrapper { padding: 40px 24px 60px; max-width: 1280px; margin: 0 auto; }
+        .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
+        .page-title span { color: var(--accent); }
+
+        .layout { display: flex; gap: 24px; align-items: flex-start; }
+
+        .panel {
+            background: var(--panel-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+            padding: 28px;
+            animation: fadeInUp 0.5s ease both;
+        }
+        .form-panel { flex: 0 0 340px; }
+        .list-panel { flex: 1; min-width: 0; }
+        .list-panel { animation-delay: 0.1s; }
+
+        .panel h2 { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 22px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: #555; }
+        .form-control {
+            width: 100%; padding: 10px 14px; border: 2px solid var(--border-input);
+            border-radius: 8px; font-family: inherit; font-size: 0.93rem;
+            transition: border-color 0.2s; background: #fafbfc; color: #1a1a2e;
+        }
+        .form-control:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; border: none; font-family: inherit; transition: all 0.25s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #ff8a65);
+            color: white; box-shadow: 0 4px 15px var(--accent-glow); width: 100%;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #f87171); color: white; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+        .btn-danger:hover { transform: translateY(-2px); }
+        .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+
+        .ag-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 4px; }
+        .ag-card {
+            border: 1px solid #edf0f7; border-radius: 12px; padding: 20px;
+            background: #fff; transition: all 0.25s; border-left: 4px solid #764ba2;
+            position: relative;
+        }
+        .ag-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+        .ag-card h3 { color: #1a1a2e; margin-bottom: 10px; font-size: 1.05rem; }
+        .ag-card p { font-size: 0.87rem; color: #666; margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
+        .ag-card p i { color: var(--accent); width: 14px; }
+
+        .status {
+            display: inline-block; padding: 3px 10px; border-radius: 20px;
+            font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .status.active { background: #d1fae5; color: #065f46; }
+        .status.terminated { background: #fee2e2; color: #991b1b; }
+
+        /* Expiry badges */
+        .expiry-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 20px; font-size: 0.76rem; font-weight: 700;
+            margin-left: 6px;
+        }
+        .expiry-critical { background: #fee2e2; color: #b91c1c; }
+        .expiry-warning { background: #fef3c7; color: #92400e; }
+        .expiry-expired { background: #f1f5f9; color: #64748b; }
+
+        .card-actions { margin-top: 16px; display: flex; justify-content: flex-end; gap: 8px; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            .form-panel { flex: none; width: 100%; }
+        }
+        @media (max-width: 768px) {
+            .main-nav a { font-size: 0.78rem; padding: 5px 7px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="page-container">
+            <a href="/dashboard" class="logo">smart<span>Rentals</span></a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/properties">Properties</a></li>
+                    <li><a href="/tenants">Tenants</a></li>
+                    <li><a href="/agreements" class="active">Agreements</a></li>
+                    <li><a href="/payments">Payments</a></li>
+                    <li><a href="/complaints">Complaints</a></li>
+                    <li><a href="/logout" class="btn-logout" style="display:inline-block;padding:7px 16px;">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <h1 class="page-title"><i class="fas fa-file-contract"></i> Lease <span>Agreements</span></h1>
+        <div class="layout">
+            <div class="panel form-panel">
+                <h2><i class="fas fa-plus-circle" style="color:var(--accent)"></i> Create Agreement</h2>
+                <form id="agreementForm">
+                    <div class="form-group">
+                        <label>Tenant</label>
+                        <select id="tenant" class="form-control" required>
+                            <option value="">— Select Tenant —</option>
+                            {% for t in tenants %}
+                            <option value="{{ t.id }}">{{ t.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Property (Vacant only)</label>
+                        <select id="property" class="form-control" required>
+                            <option value="">— Select Property —</option>
+                            {% for p in properties %}
+                            <option value="{{ p.id }}">{{ p.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Rent (₹)</label>
+                        <input type="number" id="rent_amount" class="form-control" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="start_date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="end_date" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Lease Agreement</button>
+                </form>
+            </div>
+
+            <div class="panel list-panel">
+                <h2><i class="fas fa-list" style="color:var(--accent)"></i> All Agreements</h2>
+                <div class="ag-grid">
+                    {% if agreements %}
+                        {% for a in agreements %}
+                        <div class="ag-card" id="ag-{{ a.id }}">
+                            <h3>{{ a.tenant_name }}</h3>
+                            <p><i class="fas fa-home"></i> {{ a.property_label }}</p>
+                            <p><i class="far fa-calendar-alt"></i> {{ a.start_date }} → {{ a.end_date }}</p>
+                            <p><i class="fas fa-rupee-sign"></i> ₹{{ a.rent_amount }} / month</p>
+                            <p>
+                                <span class="status {% if a.status == 'Active' %}active{% else %}terminated{% endif %}">
+                                    {{ a.status }}
+                                </span>
+                                {% if a.status == 'Active' and a.days_remaining is not none %}
+                                    {% if a.days_remaining < 0 %}
+                                        <span class="expiry-badge expiry-expired"><i class="fas fa-clock"></i> Expired</span>
+                                    {% elif a.days_remaining <= 7 %}
+                                        <span class="expiry-badge expiry-critical"><i class="fas fa-fire"></i> {{ a.days_remaining }}d left!</span>
+                                    {% elif a.days_remaining <= 30 %}
+                                        <span class="expiry-badge expiry-warning"><i class="fas fa-exclamation-triangle"></i> {{ a.days_remaining }}d left</span>
+                                    {% endif %}
+                                {% endif %}
+                            </p>
+                            {% if a.status == 'Active' %}
+                            <div class="card-actions">
+                                <button class="btn btn-danger btn-sm" onclick="terminate('{{ a.id }}')">
+                                    <i class="fas fa-times"></i> Terminate
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color:#888; padding: 16px 0;">No lease agreements found. Create one to get started.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            return document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='))
+                   ?.split('=')[1] ? decodeURIComponent(document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='))?.split('=')[1]) : null;
+        }
+
+        document.getElementById('agreementForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tenantSel = document.getElementById('tenant');
+            const propSel = document.getElementById('property');
+            const data = {
+                tenant_id: tenantSel.value,
+                tenant_name: tenantSel.options[tenantSel.selectedIndex].text,
+                property_id: propSel.value,
+                property_label: propSel.options[propSel.selectedIndex].text,
+                start_date: document.getElementById('start_date').value,
+                end_date: document.getElementById('end_date').value,
+                rent_amount: document.getElementById('rent_amount').value
+            };
+            try {
+                const res = await fetch('/api/agreements', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrf_token') },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) { window.location.reload(); }
+                else alert('Error: ' + result.error);
+            } catch (err) { alert('Something went wrong!'); }
+        });
+
+        async function terminate(id) {
+            if (!confirm('End this agreement? The property will be marked Vacant.')) return;
+            try {
+                const res = await fetch(`/api/agreements/${id}`, {
+                    method: 'DELETE', headers: { 'X-CSRFToken': getCookie('csrf_token') }
+                });
+                if ((await res.json()).success) window.location.reload();
+            } catch (err) { alert('Failed.'); }
+        }
+    </script>
+</body>
+</html>

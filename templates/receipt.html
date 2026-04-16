@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receipt | smartRentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex; align-items: flex-start; justify-content: center;
+            padding: 40px 20px;
+            color: #1a1a2e;
+        }
+
+        .receipt-wrapper {
+            background: white;
+            width: 100%; max-width: 600px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            overflow: hidden;
+        }
+
+        /* Header strip */
+        .receipt-header {
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            color: white; padding: 36px 40px; text-align: center; position: relative;
+        }
+        .receipt-header::after {
+            content: '';
+            position: absolute; bottom: -1px; left: 0; right: 0;
+            height: 30px;
+            background: white;
+            clip-path: ellipse(55% 100% at 50% 100%);
+        }
+        .brand { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; }
+        .brand span { color: #FF5F38; }
+        .receipt-header p { color: rgba(255,255,255,0.65); font-size: 0.88rem; margin-top: 4px; }
+
+        /* Body */
+        .receipt-body { padding: 10px 40px 36px; }
+
+        .receipt-title {
+            text-align: center; margin-bottom: 28px;
+            font-size: 1.1rem; font-weight: 700; color: #1a1a2e;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .receipt-id {
+            text-align: center; font-size: 0.78rem; color: #999;
+            margin-bottom: 28px; font-family: monospace;
+        }
+
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+            border: 1px solid #edf0f7; border-radius: 12px; overflow: hidden;
+            margin-bottom: 28px;
+        }
+        .info-cell {
+            padding: 14px 18px; border-bottom: 1px solid #edf0f7;
+        }
+        .info-cell:nth-child(odd) { border-right: 1px solid #edf0f7; background: #fafbff; }
+        .info-cell:nth-last-child(-n+2) { border-bottom: none; }
+        .info-cell label {
+            display: block; font-size: 0.72rem; font-weight: 600; color: #999;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+        }
+        .info-cell span { font-size: 0.92rem; font-weight: 600; color: #1a1a2e; }
+
+        /* Amount highlight */
+        .amount-box {
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            border-radius: 12px; padding: 24px;
+            text-align: center; margin-bottom: 28px; color: white;
+        }
+        .amount-box p { font-size: 0.82rem; color: rgba(255,255,255,0.6); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .amount-box .amount { font-size: 2.4rem; font-weight: 800; color: #FF5F38; }
+        .amount-box .mode { font-size: 0.85rem; color: rgba(255,255,255,0.55); margin-top: 6px; }
+
+        .verified-stamp {
+            text-align: center; margin-bottom: 24px;
+            font-size: 0.82rem; color: #10b981; font-weight: 600;
+        }
+        .verified-stamp i { margin-right: 5px; }
+
+        .note {
+            font-size: 0.78rem; color: #aaa; text-align: center;
+            line-height: 1.6; border-top: 1px dashed #eee; padding-top: 20px; margin-bottom: 24px;
+        }
+
+        /* Print button (hidden in print) */
+        .print-btn {
+            display: flex; gap: 12px; justify-content: center;
+        }
+        .btn {
+            padding: 11px 28px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; border: none; font-family: inherit; font-size: 0.92rem; transition: all 0.25s;
+        }
+        .btn-print {
+            background: linear-gradient(135deg, #FF5F38, #ff8a65);
+            color: white; box-shadow: 0 4px 15px rgba(255,95,56,0.4);
+        }
+        .btn-print:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,95,56,0.5); }
+        .btn-back {
+            background: #f1f3f9; color: #555;
+        }
+        .btn-back:hover { background: #e8eaf0; }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .receipt-wrapper { box-shadow: none; border-radius: 0; max-width: 100%; }
+            .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-wrapper">
+        <div class="receipt-header">
+            <div class="brand">smart<span>Rentals</span></div>
+            <p>Rent Payment Receipt</p>
+        </div>
+
+        <div class="receipt-body">
+            <h2 class="receipt-title">Payment Confirmation</h2>
+            <p class="receipt-id">Receipt ID: SR-{{ payment.id[:12] | upper }}</p>
+
+            <div class="amount-box">
+                <p>Amount Paid</p>
+                <div class="amount">₹{{ payment.amount | int }}</div>
+                <div class="mode">via {{ payment.mode }}</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-cell">
+                    <label>Tenant &amp; Property</label>
+                    <span>{{ payment.agreement_label }}</span>
+                </div>
+                <div class="info-cell">
+                    <label>For Month</label>
+                    <span>{{ payment.month }}</span>
+                </div>
+                <div class="info-cell">
+                    <label>Payment Date</label>
+                    <span>{{ payment.payment_date[:10] }}</span>
+                </div>
+                <div class="info-cell">
+                    <label>Recorded By</label>
+                    <span>{{ payment.recorded_by }}</span>
+                </div>
+            </div>
+
+            <p class="verified-stamp">
+                <i class="fas fa-check-circle"></i>
+                Payment verified and recorded successfully
+            </p>
+
+            <p class="note">
+                This is a computer-generated receipt and does not require a signature.<br>
+                For queries, contact your property manager.
+            </p>
+
+            <div class="print-btn">
+                <button class="btn btn-back" onclick="window.close()">&#8592; Close</button>
+                <button class="btn btn-print" onclick="window.print()">&#128438; Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</body>
+</html>

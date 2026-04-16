@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complaints | smartRentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root {
+            --accent: #FF5F38;
+            --accent-hover: #e04b2a;
+            --accent-glow: rgba(255, 95, 56, 0.4);
+            --panel-bg: rgba(255, 255, 255, 0.97);
+            --border: rgba(255, 255, 255, 0.15);
+            --border-input: #e8eaf0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%);
+            min-height: 100vh; color: #1a1a2e;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        .main-header {
+            background: rgba(8, 6, 28, 0.88);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0; position: sticky; top: 0; z-index: 1000;
+        }
+        .page-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
+        .logo span { color: var(--accent); }
+        .main-nav ul { list-style: none; display: flex; gap: 4px; align-items: center; }
+        .main-nav a {
+            color: rgba(255,255,255,0.75); font-weight: 500; font-size: 0.9rem;
+            padding: 6px 12px; border-radius: 6px; transition: all 0.2s;
+        }
+        .main-nav a:hover, .main-nav a.active { color: #fff; background: rgba(255,255,255,0.1); }
+        .btn-logout {
+            background: linear-gradient(135deg, var(--accent), #ff8a65) !important;
+            color: white !important; border-radius: 8px !important;
+            box-shadow: 0 4px 12px var(--accent-glow); font-weight: 600 !important;
+        }
+
+        .page-wrapper { padding: 40px 24px 60px; max-width: 1280px; margin: 0 auto; }
+        .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
+        .page-title span { color: var(--accent); }
+
+        .layout { display: flex; gap: 24px; align-items: flex-start; }
+
+        .panel {
+            background: var(--panel-bg); border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+            padding: 28px; animation: fadeInUp 0.5s ease both;
+        }
+        .form-panel { flex: 0 0 340px; }
+        .list-panel { flex: 1; min-width: 0; animation-delay: 0.1s; }
+
+        .panel h2 { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 22px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: #555; }
+        .form-control {
+            width: 100%; padding: 10px 14px; border: 2px solid var(--border-input);
+            border-radius: 8px; font-family: inherit; font-size: 0.93rem;
+            transition: border-color 0.2s; background: #fafbfc; color: #1a1a2e;
+        }
+        .form-control:focus { outline: none; border-color: var(--accent); background: #fff; }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; border: none; font-family: inherit; transition: all 0.25s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #ff8a65);
+            color: white; box-shadow: 0 4px 15px var(--accent-glow); width: 100%;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+        .btn-resolve {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white; box-shadow: 0 3px 10px rgba(16,185,129,0.35);
+        }
+        .btn-resolve:hover { transform: translateY(-1px); }
+        .btn-wip {
+            background: linear-gradient(135deg, #f59e0b, #fcd34d);
+            color: #78350f; box-shadow: 0 3px 10px rgba(245,158,11,0.35);
+        }
+        .btn-wip:hover { transform: translateY(-1px); }
+        .btn-sm { padding: 5px 12px; font-size: 0.8rem; }
+
+        .complaints-list { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+        .complaint-card {
+            border: 1px solid #edf0f7; border-radius: 12px; padding: 18px 20px;
+            background: #fff; transition: all 0.25s; border-left: 4px solid #e8eaf0;
+        }
+        .complaint-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .complaint-card.open   { border-left-color: #ef4444; }
+        .complaint-card.in-progress { border-left-color: #f59e0b; }
+        .complaint-card.resolved { border-left-color: #10b981; opacity: 0.75; }
+
+        .complaint-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+        .complaint-header h3 { font-size: 0.98rem; font-weight: 700; color: #1a1a2e; }
+        .complaint-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+        .status-pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.4px;
+        }
+        .pill-open      { background: #fee2e2; color: #b91c1c; }
+        .pill-in-progress { background: #fef3c7; color: #92400e; }
+        .pill-resolved  { background: #d1fae5; color: #065f46; }
+
+        .category-tag {
+            display: inline-block; padding: 2px 8px; border-radius: 6px;
+            font-size: 0.74rem; font-weight: 600; background: #ede9fe; color: #5b21b6;
+        }
+
+        .complaint-body { font-size: 0.88rem; color: #555; line-height: 1.6; margin-bottom: 12px; }
+        .complaint-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .complaint-info { font-size: 0.78rem; color: #999; }
+        .action-btns { display: flex; gap: 8px; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            .form-panel { flex: none; width: 100%; }
+        }
+        @media (max-width: 768px) {
+            .main-nav a { font-size: 0.78rem; padding: 5px 7px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="page-container">
+            <a href="/dashboard" class="logo">smart<span>Rentals</span></a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/properties">Properties</a></li>
+                    <li><a href="/tenants">Tenants</a></li>
+                    <li><a href="/agreements">Agreements</a></li>
+                    <li><a href="/payments">Payments</a></li>
+                    <li><a href="/complaints" class="active">Complaints</a></li>
+                    <li><a href="/logout" class="btn-logout" style="display:inline-block;padding:7px 16px;">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <h1 class="page-title"><i class="fas fa-tools"></i> Complaints &amp; <span>Maintenance</span></h1>
+        <div class="layout">
+            <div class="panel form-panel">
+                <h2><i class="fas fa-plus-circle" style="color:var(--accent)"></i> Log Complaint</h2>
+                <form id="complaintForm">
+                    <div class="form-group">
+                        <label>Tenant Name</label>
+                        <input type="text" id="tenant_name" class="form-control" placeholder="e.g. John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Property / Unit</label>
+                        <input type="text" id="property_ref" class="form-control" placeholder="e.g. Apt 4B, Main Street">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="category" class="form-control">
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Appliance">Appliance</option>
+                            <option value="Structural">Structural</option>
+                            <option value="Pest Control">Pest Control</option>
+                            <option value="Noise">Noise</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description <span style="color:#ef4444">*</span></label>
+                        <textarea id="description" class="form-control" required placeholder="Describe the issue in detail…"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Complaint</button>
+                </form>
+            </div>
+
+            <div class="panel list-panel">
+                <h2><i class="fas fa-clipboard-list" style="color:var(--accent)"></i> All Complaints</h2>
+                <div class="complaints-list" id="complaintsList">
+                    {% if complaints %}
+                        {% for c in complaints %}
+                        <div class="complaint-card {{ c.status | lower | replace(' ', '-') }}" id="complaint-{{ c.id }}">
+                            <div class="complaint-header">
+                                <h3><i class="fas fa-user-circle" style="color:var(--accent)"></i>
+                                    {{ c.tenant_name if c.tenant_name else 'Unknown Tenant' }}
+                                    {% if c.property_ref %}
+                                        <span style="font-weight:400;color:#888;font-size:0.88rem;"> — {{ c.property_ref }}</span>
+                                    {% endif %}
+                                </h3>
+                                <div class="complaint-meta">
+                                    <span class="category-tag">{{ c.category }}</span>
+                                    <span class="status-pill
+                                        {% if c.status == 'Open' %}pill-open
+                                        {% elif c.status == 'In Progress' %}pill-in-progress
+                                        {% else %}pill-resolved{% endif %}">
+                                        {% if c.status == 'Open' %}<i class="fas fa-circle"></i>
+                                        {% elif c.status == 'In Progress' %}<i class="fas fa-spinner"></i>
+                                        {% else %}<i class="fas fa-check-circle"></i>{% endif %}
+                                        {{ c.status }}
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="complaint-body">{{ c.description }}</p>
+                            <div class="complaint-footer">
+                                <span class="complaint-info">
+                                    <i class="far fa-clock"></i> {{ c.created_at[:10] }}
+                                </span>
+                                <div class="action-btns">
+                                    {% if c.status != 'In Progress' and c.status != 'Resolved' %}
+                                    <button class="btn btn-wip btn-sm" onclick="updateStatus('{{ c.id }}', 'In Progress')">
+                                        <i class="fas fa-spinner"></i> In Progress
+                                    </button>
+                                    {% endif %}
+                                    {% if c.status != 'Resolved' %}
+                                    <button class="btn btn-resolve btn-sm" onclick="updateStatus('{{ c.id }}', 'Resolved')">
+                                        <i class="fas fa-check"></i> Resolve
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color:#999;padding:20px 0;text-align:center;">
+                            <i class="fas fa-check-circle" style="font-size:2rem;color:#d1fae5;display:block;margin-bottom:8px;"></i>
+                            No complaints logged. All clear!
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+            return match ? decodeURIComponent(match.split('=')[1]) : null;
+        }
+
+        document.getElementById('complaintForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                tenant_name: document.getElementById('tenant_name').value,
+                property_ref: document.getElementById('property_ref').value,
+                category: document.getElementById('category').value,
+                description: document.getElementById('description').value
+            };
+            try {
+                const res = await fetch('/api/complaints', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrf_token') },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) { window.location.reload(); }
+                else alert('Error: ' + result.error);
+            } catch (err) { alert('Something went wrong!'); }
+        });
+
+        async function updateStatus(id, status) {
+            try {
+                const res = await fetch(`/api/complaints/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrf_token') },
+                    body: JSON.stringify({ status })
+                });
+                if ((await res.json()).success) window.location.reload();
+            } catch (err) { alert('Failed to update status.'); }
+        }
+    </script>
+</body>
+</html>
