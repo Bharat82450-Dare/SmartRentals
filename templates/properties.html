@@ -4,9 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Properties | smartRentals</title>
+    <meta name="description" content="Manage your rental properties — add, view, and explore property photo galleries." />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
+        /* ── Variables ──────────────────────────────────────────────────────── */
         :root {
             --accent: #ADAE5D;
             --accent-hover: #98994a;
@@ -17,29 +19,28 @@
             --bg: #1d1e18;
             --text: #f1f2e9;
             --transition-speed: 0.3s;
+            --danger: #ef4444;
+            --success: #43e97b;
         }
-
         body.bright-theme {
-            --bg:          #CFCEBA;   /* 60% Base */
-            --panel-bg:    #84A3A5;   /* 30% Secondary */
-            --border:      rgba(0,0,0,0.06);
-            --border-input: rgba(0,0,0,0.1);
-            --text:        #252621;   /* High Contrast Dark */
-            --accent:      #ADAE5D;   /* 10% Accent */
+            --bg: #CFCEBA; --panel-bg: #84A3A5; --border: rgba(0,0,0,0.06);
+            --border-input: rgba(0,0,0,0.1); --text: #252621; --accent: #ADAE5D;
         }
-
-        body.bright-theme .main-header { background: rgba(132, 163, 165, 0.95); }
-        body.bright-theme .panel { background: var(--panel-bg); }
-        body.bright-theme .form-control { background: #CFCEBA; color: #252621; }
+        body.bright-theme .main-header { background: rgba(132,163,165,0.95); }
         body.bright-theme .property-card { background: #fdfef9; border-color: rgba(0,0,0,0.08); }
         body.bright-theme .property-card h3 { color: #252621; }
         body.bright-theme .property-card p { color: #4a4c42; }
-        body.bright-theme .panel h2 { color: #f1f2e9; } /* Keep panel headers light on teal background */
+        body.bright-theme .panel h2 { color: #f1f2e9; }
         body.bright-theme .form-group label { color: #f1f2e9; }
+        body.bright-theme .form-control { background: #CFCEBA; color: #252621; }
+        body.bright-theme .type-card { background: rgba(0,0,0,0.08); color: #252621; }
+        body.bright-theme .upload-zone { background: rgba(0,0,0,0.06); }
+        body.bright-theme .review-row { border-bottom-color: rgba(0,0,0,0.08); }
 
         body { transition: background-color var(--transition-speed), color var(--transition-speed); }
         .panel, .property-card, .form-control, .main-header { transition: all var(--transition-speed); }
 
+        /* ── Theme Toggle ───────────────────────────────────────────────────── */
         .theme-toggle {
             width: 36px; height: 36px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
@@ -51,21 +52,19 @@
         .theme-toggle .fa-sun { display: none; }
         body.bright-theme .theme-toggle .fa-moon { display: none; }
         body.bright-theme .theme-toggle .fa-sun { display: block; }
+
+        /* ── Reset ──────────────────────────────────────────────────────────── */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--bg);
-            min-height: 100vh; color: var(--text);
-        }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
         a { text-decoration: none; color: inherit; }
 
+        /* ── Header ─────────────────────────────────────────────────────────── */
         .main-header {
-            background: rgba(29, 30, 24, 0.88);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 14px 0; position: sticky; top: 0; z-index: 1000;
+            background: rgba(29,30,24,0.88); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); padding: 14px 0;
+            position: sticky; top: 0; z-index: 1000;
         }
-        .page-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .page-container { max-width: 1340px; margin: 0 auto; padding: 0 24px; }
         .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
         .logo span { color: var(--accent); }
@@ -81,83 +80,296 @@
             box-shadow: 0 4px 12px var(--accent-glow); font-weight: 600 !important;
         }
 
-        .page-wrapper { padding: 40px 24px 60px; max-width: 1280px; margin: 0 auto; }
+        /* ── Page Layout ────────────────────────────────────────────────────── */
+        .page-wrapper { padding: 40px 24px 60px; max-width: 1340px; margin: 0 auto; }
         .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
         .page-title span { color: var(--accent); }
-
         .layout { display: flex; gap: 24px; align-items: flex-start; }
 
+        /* ── Panel Base ─────────────────────────────────────────────────────── */
         .panel {
-            background: var(--panel-bg); border-radius: 16px;
+            background: var(--panel-bg); border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
             padding: 28px; animation: fadeInUp 0.5s ease both;
         }
-        .form-panel { flex: 0 0 340px; }
+        .form-panel { flex: 0 0 420px; }
         .list-panel { flex: 1; min-width: 0; animation-delay: 0.1s; }
+        .panel h2 { font-size: 1.15rem; font-weight: 700; color: #f1f2e9; margin-bottom: 6px; }
 
-        .panel h2 { font-size: 1.2rem; font-weight: 700; color: #f1f2e9; margin-bottom: 22px; }
-
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: rgba(241,242,233,0.7); }
-        .form-control {
-            width: 100%; padding: 10px 14px; border: 2px solid var(--border-input);
-            border-radius: 8px; font-family: inherit; font-size: 0.93rem;
-            transition: border-color 0.2s; background: #1d1e18; color: #f1f2e9;
-        }
-        .form-control:focus { outline: none; border-color: var(--accent); background: #2c3a3b; }
-
+        /* ── Buttons ────────────────────────────────────────────────────────── */
         .btn {
-            padding: 10px 20px; border-radius: 8px; font-weight: 600;
+            padding: 10px 18px; border-radius: 10px; font-weight: 600;
             cursor: pointer; border: none; font-family: inherit; transition: all 0.25s;
+            display: inline-flex; align-items: center; gap: 7px; font-size: 0.9rem;
         }
         .btn-primary {
             background: linear-gradient(135deg, var(--accent), #ff8a65);
             color: white; box-shadow: 0 4px 15px var(--accent-glow); width: 100%;
+            justify-content: center;
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+        .btn-primary:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+        .btn-outline {
+            background: transparent; color: rgba(241,242,233,0.7);
+            border: 1.5px solid var(--border-input);
+        }
+        .btn-outline:hover { color: var(--text); border-color: var(--accent); }
+        .btn-ghost { background: rgba(255,255,255,0.07); color: rgba(241,242,233,0.7); }
+        .btn-ghost:hover { background: rgba(255,255,255,0.12); color: var(--text); }
         .btn-danger { background: linear-gradient(135deg, #ef4444, #f87171); color: white; box-shadow: 0 3px 10px rgba(239,68,68,0.3); }
         .btn-danger:hover { transform: translateY(-2px); }
-        .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+        .btn-sm { padding: 6px 14px; font-size: 0.82rem; width: auto; justify-content: center; }
 
-        .property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 4px; }
+        /* ── Form Controls ──────────────────────────────────────────────────── */
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.85rem; color: rgba(241,242,233,0.65); }
+        .form-control {
+            width: 100%; padding: 9px 13px; border: 1.5px solid var(--border-input);
+            border-radius: 8px; font-family: inherit; font-size: 0.9rem;
+            transition: border-color 0.2s; background: #1d1e18; color: #f1f2e9;
+        }
+        .form-control:focus { outline: none; border-color: var(--accent); background: #232619; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* ── Wizard Progress ────────────────────────────────────────────────── */
+        .wizard-header { margin-bottom: 24px; }
+        .wizard-progress-bar {
+            display: flex; align-items: center; gap: 0; margin-bottom: 8px;
+        }
+        .wp-dot {
+            width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border-input);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: rgba(241,242,233,0.4);
+            transition: all 0.35s; flex-shrink: 0;
+        }
+        .wp-dot.active { border-color: var(--accent); color: var(--accent); background: rgba(173,174,93,0.1); }
+        .wp-dot.done { background: var(--accent); border-color: var(--accent); color: #1d1e18; }
+        .wp-line { flex: 1; height: 2px; background: var(--border-input); transition: background 0.35s; }
+        .wp-line.done { background: var(--accent); }
+        .wp-labels { display: flex; justify-content: space-between; }
+        .wp-label { font-size: 0.72rem; font-weight: 600; color: rgba(241,242,233,0.35); transition: color 0.3s; text-align: center; }
+        .wp-label.active { color: var(--accent); }
+        .wp-label.done { color: rgba(241,242,233,0.6); }
+
+        /* ── Building Type Cards ────────────────────────────────────────────── */
+        .building-types { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+        .type-card {
+            background: rgba(255,255,255,0.04); border: 1.5px solid var(--border-input);
+            border-radius: 14px; padding: 16px 12px; text-align: center;
+            cursor: pointer; transition: all 0.25s;
+        }
+        .type-card:hover { border-color: rgba(173,174,93,0.5); background: rgba(173,174,93,0.06); transform: translateY(-2px); }
+        .type-card.selected {
+            border-color: var(--accent); background: rgba(173,174,93,0.12);
+            box-shadow: 0 0 0 3px rgba(173,174,93,0.2);
+        }
+        .type-card .type-emoji { font-size: 2rem; display: block; margin-bottom: 6px; }
+        .type-card .type-name { font-size: 0.82rem; font-weight: 600; color: rgba(241,242,233,0.8); }
+        .type-card .type-sub { font-size: 0.7rem; color: rgba(241,242,233,0.4); margin-top: 2px; }
+        .type-card.selected .type-name { color: var(--accent); }
+
+        /* ── Status Toggle ──────────────────────────────────────────────────── */
+        .status-toggle-group { display: flex; gap: 8px; }
+        .status-toggle-btn {
+            flex: 1; padding: 9px; border-radius: 8px; font-family: inherit;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            border: 1.5px solid var(--border-input); background: transparent;
+            color: rgba(241,242,233,0.5); display: flex; align-items: center;
+            justify-content: center; gap: 6px; transition: all 0.2s;
+        }
+        .status-toggle-btn.active-vacant {
+            border-color: #43e97b; color: #43e97b; background: rgba(67,233,123,0.1);
+        }
+        .status-toggle-btn.active-occupied {
+            border-color: #f5576c; color: #f5576c; background: rgba(245,87,108,0.1);
+        }
+
+        /* ── Wizard Step Transitions ────────────────────────────────────────── */
+        .wizard-step { display: none; animation: stepIn 0.3s ease both; }
+        .wizard-step.active { display: block; }
+        @keyframes stepIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+
+        .step-subtitle { font-size: 0.82rem; color: rgba(241,242,233,0.45); margin-bottom: 20px; }
+
+        /* ── Step Nav ───────────────────────────────────────────────────────── */
+        .step-nav { display: flex; gap: 8px; margin-top: 18px; }
+        .step-nav .btn-outline { flex: 0 0 auto; padding: 10px 14px; width: auto; }
+        .step-nav .btn-ghost   { flex: 1; }
+        .step-nav .btn-primary { flex: 1; width: auto; }
+
+        /* ── Upload Zones ───────────────────────────────────────────────────── */
+        .upload-section-title {
+            font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: rgba(241,242,233,0.4); margin: 16px 0 8px;
+        }
+        .upload-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .upload-zone {
+            border: 1.5px dashed var(--border-input); border-radius: 12px;
+            padding: 14px 10px; text-align: center; cursor: pointer;
+            transition: all 0.2s; position: relative; background: rgba(255,255,255,0.02);
+            overflow: hidden; min-height: 90px;
+        }
+        .upload-zone:hover { border-color: rgba(173,174,93,0.6); background: rgba(173,174,93,0.04); }
+        .upload-zone.has-file { border-color: var(--accent); border-style: solid; }
+        .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .upload-zone .zone-emoji { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .upload-zone .zone-label { font-size: 0.75rem; font-weight: 600; color: rgba(241,242,233,0.65); }
+        .upload-zone .req-badge {
+            font-size: 0.6rem; padding: 1px 6px; border-radius: 20px;
+            background: rgba(239,68,68,0.2); color: #f87171; font-weight: 700; margin-left: 4px;
+        }
+        .upload-zone .opt-badge {
+            font-size: 0.6rem; padding: 1px 6px; border-radius: 20px;
+            background: rgba(255,255,255,0.08); color: rgba(241,242,233,0.4); font-weight: 600; margin-left: 4px;
+        }
+        .upload-zone .zone-hint { font-size: 0.68rem; color: rgba(241,242,233,0.3); margin-top: 4px; }
+        .upload-zone .zone-preview {
+            width: 100%; height: 70px; object-fit: cover;
+            border-radius: 8px; margin-top: 6px; display: none;
+        }
+        .upload-zone.has-file .zone-preview { display: block; }
+        .upload-zone.has-file .zone-hint { display: none; }
+        .zone-remove {
+            position: absolute; top: 6px; right: 6px; width: 20px; height: 20px;
+            background: rgba(239,68,68,0.8); border-radius: 50%; border: none;
+            color: white; font-size: 0.65rem; cursor: pointer; display: none;
+            align-items: center; justify-content: center; z-index: 2;
+        }
+        .upload-zone.has-file .zone-remove { display: flex; }
+
+        .photos-note {
+            background: rgba(173,174,93,0.08); border: 1px solid rgba(173,174,93,0.2);
+            border-radius: 10px; padding: 10px 13px; font-size: 0.78rem;
+            color: rgba(241,242,233,0.6); margin-bottom: 14px; line-height: 1.5;
+        }
+        .photos-note i { color: var(--accent); }
+
+        /* ── Review Step ────────────────────────────────────────────────────── */
+        .review-card { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+        .review-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem;
+        }
+        .review-row:last-child { border-bottom: none; }
+        .review-row .rr-label { color: rgba(241,242,233,0.45); font-size: 0.78rem; }
+        .review-row .rr-value { color: var(--text); font-weight: 600; text-align: right; }
+        .thumb-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .thumb-strip img {
+            width: 60px; height: 45px; object-fit: cover; border-radius: 8px;
+            border: 1.5px solid var(--accent);
+        }
+        .thumb-strip .no-photos-msg { font-size: 0.78rem; color: rgba(241,242,233,0.35); font-style: italic; }
+        .review-building-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(173,174,93,0.15); border: 1px solid rgba(173,174,93,0.3);
+            border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; color: var(--accent);
+            font-weight: 600; margin-bottom: 14px;
+        }
+
+        /* ── Property Cards (List Panel) ────────────────────────────────────── */
+        .property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; margin-top: 4px; }
         .property-card {
-            border: 1px solid var(--border-input); border-radius: 12px; padding: 20px;
+            border: 1px solid var(--border-input); border-radius: 14px; padding: 20px;
             background: #3a4d4e; transition: all 0.25s; position: relative; overflow: hidden;
+            cursor: pointer;
         }
-        .property-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-        }
+        .property-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
         .property-card.vacant::before { background: linear-gradient(90deg, #43e97b, #38f9d7); }
         .property-card.occupied::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
         .property-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
-        .property-card h3 { color: #f1f2e9; font-size: 1.05rem; margin-bottom: 10px; }
-        .property-card p { font-size: 0.86rem; color: rgba(241,242,233,0.7); margin-bottom: 7px; display: flex; align-items: center; gap: 8px; }
+        .property-card h3 { color: #f1f2e9; font-size: 1rem; margin-bottom: 10px; margin-top: 4px; }
+        .property-card p { font-size: 0.84rem; color: rgba(241,242,233,0.65); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
         .property-card p i { color: var(--accent); width: 14px; }
-
+        .gallery-hint {
+            position: absolute; top: 10px; right: 10px; font-size: 0.68rem;
+            color: rgba(255,255,255,0.25); font-weight: 600; display: flex; align-items: center; gap: 4px;
+            transition: color 0.2s;
+        }
+        .property-card:hover .gallery-hint { color: rgba(255,255,255,0.6); }
+        .btype-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.68rem; background: rgba(255,255,255,0.06);
+            padding: 2px 8px; border-radius: 10px; color: rgba(241,242,233,0.55);
+            margin-bottom: 8px;
+        }
         .status-badge {
             display: inline-flex; align-items: center; gap: 5px;
-            padding: 4px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 700;
+            padding: 3px 12px; border-radius: 20px; font-size: 0.74rem; font-weight: 700;
             text-transform: uppercase; letter-spacing: 0.4px;
         }
         .status-vacant { background: #d1fae5; color: #065f46; }
         .status-occupied { background: #fee2e2; color: #991b1b; }
+        .card-actions { margin-top: 14px; display: flex; justify-content: flex-end; }
 
-        .card-actions { margin-top: 16px; display: flex; justify-content: flex-end; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(22px); }
-            to   { opacity: 1; transform: translateY(0); }
+        /* ── Gallery Modal ──────────────────────────────────────────────────── */
+        .modal {
+            display: none; position: fixed; inset: 0; z-index: 2000;
+            background: rgba(0,0,0,0.88); backdrop-filter: blur(12px);
+            align-items: center; justify-content: center;
+            transition: opacity 0.3s; opacity: 0;
         }
-        @media (max-width: 900px) {
+        .modal.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: rgba(44,58,59,0.95); border: 1px solid rgba(255,255,255,0.07);
+            width: 92%; max-width: 1020px; border-radius: 24px; padding: 40px;
+            position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            transform: scale(0.92); transition: transform 0.3s;
+        }
+        .modal.active .modal-content { transform: scale(1); }
+        .close-modal {
+            position: absolute; top: 20px; right: 20px; width: 36px; height: 36px;
+            background: rgba(255,255,255,0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; color: #fff; cursor: pointer; opacity: 0.6; transition: all 0.2s;
+        }
+        .close-modal:hover { opacity: 1; transform: rotate(90deg); background: rgba(255,255,255,0.2); }
+        .gallery-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 24px; text-align: center; }
+        .gallery-title span { color: var(--accent); }
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 20px; max-height: 62vh; overflow-y: auto; padding-right: 8px;
+        }
+        .gallery-grid::-webkit-scrollbar { width: 6px; }
+        .gallery-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        .gallery-item {
+            position: relative; border-radius: 14px; overflow: hidden;
+            aspect-ratio: 16/10; background: #1d1e18;
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .gallery-item:hover img { transform: scale(1.08); }
+        .gallery-label {
+            position: absolute; bottom: 0; left: 0; right: 0; padding: 12px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            color: #fff; font-size: 0.82rem; font-weight: 600;
+        }
+        .no-images-msg {
+            grid-column: 1 / -1; text-align: center; padding: 60px 20px;
+            color: rgba(241,242,233,0.35); font-size: 0.95rem;
+        }
+        .no-images-msg i { font-size: 3rem; display: block; margin-bottom: 14px; opacity: 0.3; }
+        .loading-spinner { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 60px 0; width: 100%; }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.9s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Animations ─────────────────────────────────────────────────────── */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ── Responsive ─────────────────────────────────────────────────────── */
+        @media (max-width: 1000px) {
             .layout { flex-direction: column; }
             .form-panel { flex: none; width: 100%; }
         }
         @media (max-width: 768px) {
             .main-nav a { font-size: 0.78rem; padding: 5px 7px; }
+            .modal-content { padding: 22px; }
+            .gallery-title { font-size: 1.3rem; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+    <!-- ── Header ────────────────────────────────────────────────────────────── -->
     <header class="main-header">
         <div class="page-container">
             <a href="/dashboard" class="logo">smart<span>Rentals</span></a>
@@ -169,10 +381,9 @@
                     <li><a href="/agreements">Agreements</a></li>
                     <li><a href="/payments">Payments</a></li>
                     <li><a href="/complaints">Complaints</a></li>
-                    <li style="display:flex; align-items:center; margin-left:10px;">
+                    <li style="display:flex;align-items:center;margin-left:10px;">
                         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                            <i class="fas fa-moon"></i>
-                            <i class="fas fa-sun"></i>
+                            <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
                         </button>
                     </li>
                     <li><a href="/logout" class="btn-logout" style="display:inline-block;padding:7px 16px;">Logout</a></li>
@@ -184,52 +395,146 @@
     <div class="page-wrapper">
         <h1 class="page-title"><i class="fas fa-building"></i> Manage <span>Properties</span></h1>
         <div class="layout">
-            <div class="panel form-panel">
-                <h2><i class="fas fa-plus-circle" style="color:var(--accent)"></i> Add Property</h2>
-                <form id="addPropertyForm">
-                    <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" id="address" class="form-control" required placeholder="e.g. 123 Main Street">
-                    </div>
-                    <div class="form-group">
-                        <label>Flat / Unit Number</label>
-                        <input type="text" id="flat_number" class="form-control" required placeholder="e.g. Apt 4B">
-                    </div>
-                    <div class="form-group">
-                        <label>Property Type</label>
-                        <select id="type" class="form-control" required>
-                            <option value="1BHK">1 BHK</option>
-                            <option value="2BHK">2 BHK</option>
-                            <option value="3BHK">3 BHK</option>
-                            <option value="Studio">Studio</option>
-                            <option value="Commercial">Commercial</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Monthly Rent (₹)</label>
-                        <input type="number" id="rent_amount" class="form-control" required min="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Security Deposit (₹)</label>
-                        <input type="number" id="deposit_amount" class="form-control" required min="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Availability</label>
-                        <select id="status" class="form-control" required>
-                            <option value="Vacant">Vacant</option>
-                            <option value="Occupied">Occupied</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add Property</button>
-                </form>
-            </div>
 
+            <!-- ── WIZARD FORM PANEL ─────────────────────────────────────────── -->
+            <div class="panel form-panel">
+
+                <!-- Progress Bar -->
+                <div class="wizard-header">
+                    <div class="wizard-progress-bar">
+                        <div class="wp-dot active" id="dot-1">1</div>
+                        <div class="wp-line" id="line-1"></div>
+                        <div class="wp-dot" id="dot-2">2</div>
+                        <div class="wp-line" id="line-2"></div>
+                        <div class="wp-dot" id="dot-3">3</div>
+                    </div>
+                    <div class="wp-labels">
+                        <span class="wp-label active" id="lbl-1" style="flex:0 0 32px;">Details</span>
+                        <span class="wp-label" id="lbl-2" style="flex:0 0 32px;text-align:center;">Photos</span>
+                        <span class="wp-label" id="lbl-3" style="flex:0 0 32px;text-align:right;">Review</span>
+                    </div>
+                </div>
+
+                <!-- ── STEP 1: Property Details ─────────────────────────────── -->
+                <div class="wizard-step active" id="step-1">
+                    <h2>Add Property</h2>
+                    <p class="step-subtitle">Select your building type to begin</p>
+
+                    <div class="building-types" id="buildingTypes">
+                        <div class="type-card" data-type="Apartment" onclick="selectType(this)">
+                            <span class="type-emoji">🏢</span>
+                            <div class="type-name">Apartment</div>
+                            <div class="type-sub">Flat / Multi-storey</div>
+                        </div>
+                        <div class="type-card" data-type="House" onclick="selectType(this)">
+                            <span class="type-emoji">🏠</span>
+                            <div class="type-name">House</div>
+                            <div class="type-sub">Standalone / Row</div>
+                        </div>
+                        <div class="type-card" data-type="Bungalow" onclick="selectType(this)">
+                            <span class="type-emoji">🏡</span>
+                            <div class="type-name">Bungalow</div>
+                            <div class="type-sub">Villa / Garden</div>
+                        </div>
+                        <div class="type-card" data-type="Commercial" onclick="selectType(this)">
+                            <span class="type-emoji">🏗</span>
+                            <div class="type-name">Commercial</div>
+                            <div class="type-sub">Office / Shop</div>
+                        </div>
+                    </div>
+
+                    <div id="detailsFields" style="display:none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Flat / Unit No.</label>
+                                <input type="text" id="f-flat" class="form-control" placeholder="e.g. B-404">
+                            </div>
+                            <div class="form-group">
+                                <label>Unit Type</label>
+                                <select id="f-type" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" id="f-address" class="form-control" placeholder="e.g. Survey No. 12, MG Road, Pune">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Monthly Rent (₹)</label>
+                                <input type="number" id="f-rent" class="form-control" min="0" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Security Deposit (₹)</label>
+                                <input type="number" id="f-deposit" class="form-control" min="0" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Availability</label>
+                            <div class="status-toggle-group">
+                                <button type="button" class="status-toggle-btn active-vacant" id="btn-vacant" onclick="setStatus('Vacant')">
+                                    <i class="fas fa-door-open"></i> Vacant
+                                </button>
+                                <button type="button" class="status-toggle-btn" id="btn-occupied" onclick="setStatus('Occupied')">
+                                    <i class="fas fa-door-closed"></i> Occupied
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="goToStep(2)">
+                            Photos & Review <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ── STEP 2: Photos ────────────────────────────────────────── -->
+                <div class="wizard-step" id="step-2">
+                    <h2>Property Photos <span id="photo-optional-badge" style="font-size:0.72rem;background:rgba(255,255,255,0.08);padding:3px 9px;border-radius:20px;color:rgba(241,242,233,0.45);font-weight:500;vertical-align:middle;margin-left:6px;">Optional</span></h2>
+                    <p class="step-subtitle" id="photo-subtitle">Upload photos to help tenants visualise the space</p>
+
+                    <div class="photos-note">
+                        <i class="fas fa-info-circle"></i>
+                        If no photos are uploaded, <strong>showcase images</strong> from our library will be displayed for residential properties.
+                    </div>
+
+                    <div id="upload-zones-container"></div>
+
+                    <div class="step-nav">
+                        <button class="btn btn-outline" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i></button>
+                        <button class="btn btn-ghost" onclick="skipPhotos()">Skip Photos</button>
+                        <button class="btn btn-primary" onclick="validateAndProceedToReview()">
+                            Review <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ── STEP 3: Review & Submit ───────────────────────────────── -->
+                <div class="wizard-step" id="step-3">
+                    <h2>Review & Submit</h2>
+                    <p class="step-subtitle">Confirm your property details before adding</p>
+                    <div id="review-content"></div>
+                    <div class="step-nav">
+                        <button class="btn btn-outline" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i></button>
+                        <button class="btn btn-primary" id="submitBtn" onclick="submitProperty()">
+                            <i class="fas fa-check"></i> Add Property
+                        </button>
+                    </div>
+                </div>
+
+            </div><!-- /form-panel -->
+
+            <!-- ── PROPERTY LIST PANEL ───────────────────────────────────────── -->
             <div class="panel list-panel">
                 <h2><i class="fas fa-home" style="color:var(--accent)"></i> Your Properties</h2>
                 <div class="property-grid" id="propertyGrid">
                     {% if properties %}
                         {% for p in properties %}
-                        <div class="property-card {% if p.status == 'Vacant' %}vacant{% else %}occupied{% endif %}" id="property-{{ p.id }}">
+                        <div class="property-card {% if p.status == 'Vacant' %}vacant{% else %}occupied{% endif %}"
+                             id="property-{{ p.id }}"
+                             onclick="if(!event.target.closest('button')) openGallery('{{ p.id }}', '{{ p.flat_number }}', '{{ p.get('building_type', '') }}')">
+                            <div class="gallery-hint"><i class="fas fa-images"></i> View Gallery</div>
+                            <div class="btype-badge">
+                                {% if p.get('building_type') == 'Apartment' %}🏢{% elif p.get('building_type') == 'House' %}🏠{% elif p.get('building_type') == 'Bungalow' %}🏡{% elif p.get('building_type') == 'Commercial' %}🏗{% else %}🏠{% endif %}
+                                {{ p.get('building_type', 'Property') }}
+                            </div>
                             <h3><i class="fas fa-home" style="color:var(--accent)"></i> {{ p.flat_number }}, {{ p.address }}</h3>
                             <p><i class="fas fa-layer-group"></i> {{ p.type }}</p>
                             <p><i class="fas fa-rupee-sign"></i> ₹{{ p.rent_amount | int }} / month</p>
@@ -248,62 +553,466 @@
                         </div>
                         {% endfor %}
                     {% else %}
-                        <p style="color:#999;padding:16px 0;">No properties added yet. Add one to get started.</p>
+                        <p style="color:#999;padding:16px 0;">No properties added yet. Use the wizard on the left to get started.</p>
                     {% endif %}
                 </div>
             </div>
+
+        </div><!-- /layout -->
+    </div><!-- /page-wrapper -->
+
+    <!-- ── Gallery Modal ──────────────────────────────────────────────────────── -->
+    <div class="modal" id="galleryModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeGallery()"><i class="fas fa-times"></i></span>
+            <h2 class="gallery-title">Gallery: <span id="galleryPropertyName">...</span></h2>
+            <div class="gallery-grid" id="galleryGrid"></div>
         </div>
     </div>
 
     <script>
-        function getCookie(name) {
-            const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
-            return match ? decodeURIComponent(match.split('=')[1]) : null;
+    /* ══════════════════════════════════════════════════════════════════════
+       WIZARD STATE
+    ══════════════════════════════════════════════════════════════════════ */
+    let selectedBuildingType = null;
+    let selectedStatus = 'Vacant';
+    let uploadedFiles   = {};   // category → File object
+    let photosSkipped   = false;
+    let currentStep     = 1;
+
+    /* ── Building configs ───────────────────────────────────────────────────── */
+    const BUILDING_CONFIGS = {
+        Apartment: {
+            icon: '🏢',
+            unitTypes: ['Studio', '1 BHK', '2 BHK', '3 BHK', '4 BHK+'],
+            isCommercial: false,
+            compulsory: ['hall','kitchen','bedroom','bathroom'],
+            optional:   ['balcony','clubhouse','parking','terrace']
+        },
+        House: {
+            icon: '🏠',
+            unitTypes: ['2 BHK', '3 BHK', '4 BHK', 'Independent'],
+            isCommercial: false,
+            compulsory: ['hall','kitchen','bedroom','bathroom'],
+            optional:   ['balcony','garden','parking','terrace']
+        },
+        Bungalow: {
+            icon: '🏡',
+            unitTypes: ['3 BHK', '4 BHK', '5 BHK', 'Villa'],
+            isCommercial: false,
+            compulsory: ['hall','kitchen','bedroom','bathroom'],
+            optional:   ['balcony','garden','parking','terrace','pool','garage']
+        },
+        Commercial: {
+            icon: '🏗',
+            unitTypes: ['Shop', 'Office', 'Showroom', 'Warehouse', 'Restaurant Space', 'Co-working Space'],
+            isCommercial: true,
+            compulsory: ['facade','reception'],
+            optional:   ['office_space','conference_room','restroom','parking','server_room','canteen']
+        }
+    };
+
+    const CATEGORY_META = {
+        hall:            { label: 'Hall / Living Room', emoji: '🛋️' },
+        kitchen:         { label: 'Kitchen',            emoji: '🍳' },
+        bedroom:         { label: 'Bedroom',            emoji: '🛏️' },
+        bathroom:        { label: 'Bathroom',           emoji: '🚿' },
+        balcony:         { label: 'Balcony',            emoji: '🌅' },
+        garden:          { label: 'Garden',             emoji: '🌿' },
+        clubhouse:       { label: 'Clubhouse',          emoji: '🏊' },
+        parking:         { label: 'Parking',            emoji: '🚗' },
+        terrace:         { label: 'Terrace',            emoji: '🌇' },
+        pool:            { label: 'Swimming Pool',      emoji: '💧' },
+        garage:          { label: 'Garage',             emoji: '🏎️' },
+        facade:          { label: 'Facade / Entry',     emoji: '🏢' },
+        reception:       { label: 'Reception',          emoji: '💼' },
+        office_space:    { label: 'Office Space',       emoji: '💼' },
+        conference_room: { label: 'Conference Room',    emoji: '📊' },
+        restroom:        { label: 'Restroom',           emoji: '🚻' },
+        server_room:     { label: 'Server Room',        emoji: '💻' },
+        canteen:         { label: 'Canteen',            emoji: '🍽️' }
+    };
+
+    /* ══════════════════════════════════════════════════════════════════════
+       STEP 1 LOGIC
+    ══════════════════════════════════════════════════════════════════════ */
+    function selectType(card) {
+        document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedBuildingType = card.dataset.type;
+
+        // Populate unit type dropdown
+        const cfg = BUILDING_CONFIGS[selectedBuildingType];
+        const sel = document.getElementById('f-type');
+        sel.innerHTML = cfg.unitTypes.map(t => `<option value="${t}">${t}</option>`).join('');
+
+        // Reveal the details fields with animation
+        const fields = document.getElementById('detailsFields');
+        fields.style.display = 'block';
+        fields.style.animation = 'stepIn 0.3s ease both';
+    }
+
+    function setStatus(s) {
+        selectedStatus = s;
+        document.getElementById('btn-vacant').className   = 'status-toggle-btn' + (s === 'Vacant'   ? ' active-vacant'   : '');
+        document.getElementById('btn-occupied').className = 'status-toggle-btn' + (s === 'Occupied' ? ' active-occupied' : '');
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       WIZARD NAVIGATION
+    ══════════════════════════════════════════════════════════════════════ */
+    function goToStep(n) {
+        if (n === 2 && !validateStep1()) return;
+
+        document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+        document.getElementById(`step-${n}`).classList.add('active');
+        currentStep = n;
+        updateProgressBar(n);
+
+        if (n === 2) buildUploadZones();
+        if (n === 3) buildReview();
+    }
+
+    function updateProgressBar(n) {
+        for (let i = 1; i <= 3; i++) {
+            const dot = document.getElementById(`dot-${i}`);
+            const lbl = document.getElementById(`lbl-${i}`);
+            dot.className = 'wp-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+            dot.innerHTML = i < n ? '<i class="fas fa-check" style="font-size:0.7rem"></i>' : i;
+            lbl.className = 'wp-label' + (i < n ? ' done' : i === n ? ' active' : '');
+        }
+        for (let i = 1; i <= 2; i++) {
+            document.getElementById(`line-${i}`).className = 'wp-line' + (i < n ? ' done' : '');
+        }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       STEP 1 VALIDATION
+    ══════════════════════════════════════════════════════════════════════ */
+    function validateStep1() {
+        if (!selectedBuildingType) {
+            showToast('Please select a building type first.', 'error'); return false;
+        }
+        const address = document.getElementById('f-address').value.trim();
+        const flat    = document.getElementById('f-flat').value.trim();
+        const rent    = document.getElementById('f-rent').value;
+        const deposit = document.getElementById('f-deposit').value;
+        if (!address) { showToast('Please enter an address.', 'error'); return false; }
+        if (!flat)    { showToast('Please enter a flat / unit number.', 'error'); return false; }
+        if (!rent || parseFloat(rent) < 0) { showToast('Please enter a valid monthly rent.', 'error'); return false; }
+        if (!deposit || parseFloat(deposit) < 0) { showToast('Please enter a valid deposit amount.', 'error'); return false; }
+        return true;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       STEP 2: Build upload zones dynamically
+    ══════════════════════════════════════════════════════════════════════ */
+    function buildUploadZones() {
+        const cfg = BUILDING_CONFIGS[selectedBuildingType];
+        const container = document.getElementById('upload-zones-container');
+
+        let html = `<p class="upload-section-title">Required Photos</p><div class="upload-zones">`;
+        cfg.compulsory.forEach(cat => {
+            html += zoneHTML(cat, true);
+        });
+        html += `</div>`;
+
+        if (cfg.optional.length) {
+            html += `<p class="upload-section-title" style="margin-top:14px;">Optional Photos</p><div class="upload-zones">`;
+            cfg.optional.forEach(cat => {
+                html += zoneHTML(cat, false);
+            });
+            html += `</div>`;
         }
 
-        document.getElementById('addPropertyForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const data = {
-                address: document.getElementById('address').value,
-                flat_number: document.getElementById('flat_number').value,
-                type: document.getElementById('type').value,
-                rent_amount: document.getElementById('rent_amount').value,
-                deposit_amount: document.getElementById('deposit_amount').value,
-                status: document.getElementById('status').value
-            };
-            try {
-                const res = await fetch('/api/properties', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrf_token') },
-                    body: JSON.stringify(data)
-                });
-                const result = await res.json();
-                if (result.success) { alert('Property added!'); window.location.reload(); }
-                else alert('Error: ' + result.error);
-            } catch (err) { alert('Something went wrong!'); }
+        container.innerHTML = html;
+
+        // Re-attach file input listeners
+        container.querySelectorAll('.upload-zone input[type=file]').forEach(input => {
+            input.addEventListener('change', () => handleFileSelect(input));
         });
 
-        async function deleteProperty(id) {
-            if (!confirm('Delete this property permanently?')) return;
-            try {
-                const res = await fetch(`/api/properties/${id}`, {
-                    method: 'DELETE', headers: { 'X-CSRFToken': getCookie('csrf_token') }
-                });
-                if ((await res.json()).success) document.getElementById(`property-${id}`).remove();
-                else alert('Failed to delete.');
-            } catch (err) { alert('Error occurred.'); }
+        // Restore previously selected files (if navigating back & forward)
+        Object.entries(uploadedFiles).forEach(([cat, file]) => {
+            const zone = container.querySelector(`.upload-zone[data-cat="${cat}"]`);
+            if (zone) restorePreview(zone, file);
+        });
+    }
+
+    function zoneHTML(cat, required) {
+        const meta = CATEGORY_META[cat] || { label: cat, emoji: '📷' };
+        const badge = required
+            ? `<span class="req-badge">Required</span>`
+            : `<span class="opt-badge">Optional</span>`;
+        return `
+            <div class="upload-zone" data-cat="${cat}" id="zone-${cat}">
+                <input type="file" accept="image/*" data-cat="${cat}">
+                <button class="zone-remove" onclick="removeFile('${cat}', event)" title="Remove">✕</button>
+                <span class="zone-emoji">${meta.emoji}</span>
+                <div class="zone-label">${meta.label}${badge}</div>
+                <div class="zone-hint">Click or drag to upload</div>
+                <img class="zone-preview" id="prev-${cat}" alt="${meta.label}" />
+            </div>`;
+    }
+
+    function handleFileSelect(input) {
+        const cat  = input.dataset.cat;
+        const file = input.files[0];
+        if (!file) return;
+        uploadedFiles[cat] = file;
+        const zone = input.closest('.upload-zone');
+        restorePreview(zone, file);
+    }
+
+    function restorePreview(zone, file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            zone.querySelector('.zone-preview').src = e.target.result;
+            zone.classList.add('has-file');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removeFile(cat, e) {
+        e.stopPropagation();
+        delete uploadedFiles[cat];
+        const zone = document.getElementById(`zone-${cat}`);
+        if (zone) {
+            zone.classList.remove('has-file');
+            zone.querySelector('input[type=file]').value = '';
+            zone.querySelector('.zone-preview').src = '';
         }
-        // ── Theme Logic ──────────────────────────────────────────
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
+    }
 
-        const savedTheme = localStorage.getItem('sr-theme') || 'dark';
-        if (savedTheme === 'bright') body.classList.add('bright-theme');
+    function skipPhotos() {
+        photosSkipped = true;
+        uploadedFiles = {};
+        goToStep(3);
+    }
 
-        themeToggle.addEventListener('click', () => {
-            const isBright = body.classList.toggle('bright-theme');
-            localStorage.setItem('sr-theme', isBright ? 'bright' : 'dark');
+    /* ══════════════════════════════════════════════════════════════════════
+       STEP 2 VALIDATION (before going to review)
+    ══════════════════════════════════════════════════════════════════════ */
+    function validateAndProceedToReview() {
+        if (Object.keys(uploadedFiles).length === 0) {
+            // No files selected — just proceed (same as skip)
+            photosSkipped = false;
+            goToStep(3);
+            return;
+        }
+
+        const cfg = BUILDING_CONFIGS[selectedBuildingType];
+        const missingRequired = cfg.compulsory.filter(cat => !uploadedFiles[cat]);
+        if (missingRequired.length > 0) {
+            const labels = missingRequired.map(c => (CATEGORY_META[c] || {label: c}).label).join(', ');
+            showToast(`Please upload required photos: ${labels}`, 'error');
+            return;
+        }
+
+        photosSkipped = false;
+        goToStep(3);
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       STEP 3: Build review content
+    ══════════════════════════════════════════════════════════════════════ */
+    function buildReview() {
+        const cfg     = BUILDING_CONFIGS[selectedBuildingType];
+        const address = document.getElementById('f-address').value;
+        const flat    = document.getElementById('f-flat').value;
+        const type    = document.getElementById('f-type').value;
+        const rent    = parseInt(document.getElementById('f-rent').value).toLocaleString('en-IN');
+        const deposit = parseInt(document.getElementById('f-deposit').value).toLocaleString('en-IN');
+
+        // Build thumbnail strip
+        let thumbs = '';
+        if (Object.keys(uploadedFiles).length > 0) {
+            // Thumbnails will be rendered async after preview is set
+            thumbs = Object.entries(uploadedFiles).map(([cat, file]) => {
+                const src = URL.createObjectURL(file);
+                const meta = CATEGORY_META[cat] || { label: cat };
+                return `<img src="${src}" title="${meta.label}" />`;
+            }).join('');
+        } else {
+            thumbs = `<span class="no-photos-msg">${
+                cfg.isCommercial ? 'No photos — none will be displayed.' : 'No photos — library images will be shown.'
+            }</span>`;
+        }
+
+        document.getElementById('review-content').innerHTML = `
+            <div class="review-building-badge">
+                ${cfg.icon} ${selectedBuildingType}
+            </div>
+            <div class="review-card">
+                <div class="review-row"><span class="rr-label">Flat / Unit</span><span class="rr-value">${flat}</span></div>
+                <div class="review-row"><span class="rr-label">Address</span><span class="rr-value" style="max-width:200px;font-size:0.8rem;">${address}</span></div>
+                <div class="review-row"><span class="rr-label">Unit Type</span><span class="rr-value">${type}</span></div>
+                <div class="review-row"><span class="rr-label">Monthly Rent</span><span class="rr-value">₹${rent}</span></div>
+                <div class="review-row"><span class="rr-label">Security Deposit</span><span class="rr-value">₹${deposit}</span></div>
+                <div class="review-row">
+                    <span class="rr-label">Status</span>
+                    <span class="rr-value">
+                        <span class="status-badge ${selectedStatus === 'Vacant' ? 'status-vacant' : 'status-occupied'}">
+                            ${selectedStatus}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <p style="font-size:0.78rem;color:rgba(241,242,233,0.4);margin-bottom:8px;">
+                ${Object.keys(uploadedFiles).length} photo(s) attached
+            </p>
+            <div class="thumb-strip">${thumbs}</div>
+        `;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       SUBMIT PROPERTY
+    ══════════════════════════════════════════════════════════════════════ */
+    async function submitProperty() {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:3px;margin:0 auto;"></div>';
+
+        const fd = new FormData();
+        fd.append('address',       document.getElementById('f-address').value.trim());
+        fd.append('flat_number',   document.getElementById('f-flat').value.trim());
+        fd.append('building_type', selectedBuildingType);
+        fd.append('type',          document.getElementById('f-type').value);
+        fd.append('rent_amount',   document.getElementById('f-rent').value);
+        fd.append('deposit_amount',document.getElementById('f-deposit').value);
+        fd.append('status',        selectedStatus);
+
+        // Attach image files with key format img_<category>
+        Object.entries(uploadedFiles).forEach(([cat, file]) => {
+            fd.append(`img_${cat}`, file, file.name);
         });
+
+        try {
+            const res = await fetch('/api/properties', {
+                method:  'POST',
+                headers: { 'X-CSRFToken': getCookie('csrf_token') },
+                body:    fd
+            });
+            const result = await res.json();
+            if (result.success) {
+                showToast('Property added successfully! 🎉', 'success');
+                setTimeout(() => window.location.reload(), 1200);
+            } else {
+                showToast('Error: ' + result.error, 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Add Property';
+            }
+        } catch (err) {
+            showToast('Network error. Please try again.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Add Property';
+        }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       GALLERY MODAL
+    ══════════════════════════════════════════════════════════════════════ */
+    const galleryModal = document.getElementById('galleryModal');
+    const galleryGrid  = document.getElementById('galleryGrid');
+    const galleryName  = document.getElementById('galleryPropertyName');
+
+    async function openGallery(pid, name, buildingType) {
+        galleryName.textContent = name;
+        galleryModal.classList.add('active');
+        galleryGrid.innerHTML = `<div class="loading-spinner"><div class="spinner"></div><p>Loading gallery…</p></div>`;
+
+        try {
+            const res    = await fetch(`/api/properties/${pid}/images`);
+            const images = await res.json();
+            const entries = Object.entries(images).filter(([, url]) => url);
+
+            if (entries.length === 0) {
+                const isCommercial = (buildingType || '').toLowerCase().includes('commercial');
+                galleryGrid.innerHTML = `
+                    <div class="no-images-msg">
+                        <i class="fas fa-${isCommercial ? 'building' : 'home'}"></i>
+                        ${isCommercial
+                            ? 'No images have been uploaded for this commercial property.'
+                            : 'No gallery images available for this property.'}
+                    </div>`;
+                return;
+            }
+
+            galleryGrid.innerHTML = entries.map(([cat, url]) => {
+                const meta = CATEGORY_META[cat] || { label: cat.replace(/_/g, ' '), emoji: '📷' };
+                return `
+                    <div class="gallery-item">
+                        <img src="${url}" alt="${meta.label}"
+                             onerror="this.parentElement.style.display='none'">
+                        <div class="gallery-label">${meta.emoji} ${meta.label}</div>
+                    </div>`;
+            }).join('');
+        } catch (err) {
+            galleryGrid.innerHTML = `<div class="no-images-msg"><i class="fas fa-exclamation-circle"></i>Failed to load images.</div>`;
+        }
+    }
+
+    function closeGallery() { galleryModal.classList.remove('active'); }
+    galleryModal.addEventListener('click', e => { if (e.target === galleryModal) closeGallery(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeGallery(); });
+
+    /* ══════════════════════════════════════════════════════════════════════
+       DELETE PROPERTY
+    ══════════════════════════════════════════════════════════════════════ */
+    async function deleteProperty(id) {
+        if (!confirm('Delete this property permanently?')) return;
+        try {
+            const res = await fetch(`/api/properties/${id}`, {
+                method: 'DELETE', headers: { 'X-CSRFToken': getCookie('csrf_token') }
+            });
+            if ((await res.json()).success) {
+                document.getElementById(`property-${id}`).remove();
+                showToast('Property deleted.', 'success');
+            } else {
+                showToast('Failed to delete property.', 'error');
+            }
+        } catch { showToast('Error occurred.', 'error'); }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       UTILITIES
+    ══════════════════════════════════════════════════════════════════════ */
+    function getCookie(name) {
+        const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+        return match ? decodeURIComponent(match.split('=')[1]) : null;
+    }
+
+    let toastTimeout;
+    function showToast(msg, type = 'info') {
+        clearTimeout(toastTimeout);
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.style.cssText = `
+                position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+                padding:12px 24px; border-radius:12px; font-family:'Poppins',sans-serif;
+                font-size:0.88rem; font-weight:600; z-index:9999;
+                box-shadow:0 8px 24px rgba(0,0,0,0.4); transition:opacity 0.3s;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.background = type === 'error' ? '#ef4444' : type === 'success' ? '#22c55e' : '#ADAE5D';
+        toast.style.color = '#fff'; toast.style.opacity = '1';
+        toastTimeout = setTimeout(() => { toast.style.opacity = '0'; }, 3500);
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       THEME TOGGLE
+    ══════════════════════════════════════════════════════════════════════ */
+    const themeToggle = document.getElementById('themeToggle');
+    const body        = document.body;
+    if (localStorage.getItem('sr-theme') === 'bright') body.classList.add('bright-theme');
+    themeToggle.addEventListener('click', () => {
+        const isBright = body.classList.toggle('bright-theme');
+        localStorage.setItem('sr-theme', isBright ? 'bright' : 'dark');
+    });
     </script>
 </body>
 </html>

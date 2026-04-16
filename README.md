@@ -94,6 +94,31 @@ SmartRentals isn't just a tool; it's an experience.
 
 ---
 
+## 🔑 Login Credentials (Development)
+
+To explore the tri-portal system, use the following default/setup credentials:
+
+### 🔴 Admin Portal
+*   **URL**: `http://localhost:5000/login`
+*   **Username**: `admin`
+*   **Password**: `admin123`
+*   *Note: used for managing properties, tenants, and system-wide stats.*
+
+### 👤 Tenant Portal
+*   **URL**: `http://localhost:5000/tenant/login`
+*   **Credentials**: A registered tenant's **Phone Number** and the **Portal Password** set by the Admin during registration.
+*   *Step: Register a tenant in the Admin portal first.*
+
+### 🔧 Staff Portal
+*   **URL**: `http://localhost:5000/staff/login`
+*   **Credentials**:
+    *   **Username**: `john_p`
+    *   **Password**: `staff123`
+    *   *(Role: Plumber - Seeded as sample staff)*
+*   *Note: You can add more staff members via Admin -> Staff Management.*
+
+---
+
 ## ⚙️ Installation & Setup
 
 1. **Clone the repository**:
@@ -108,10 +133,21 @@ SmartRentals isn't just a tool; it's an experience.
    ```
 
 3. **Firebase Configuration**:
-   - Place your `serviceAccountKey.json` in the root directory.
-   - Ensure you have a Firestore project set up with collections: `properties`, `tenants`, `agreements`, `payments`, `complaints`, `staff_users`.
+   Follow these steps to set up your database:
+   *   Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
+   *   Navigate to **Build > Firestore Database** and click **Create Database**.
+   *   Select **Start in test mode** for initial development.
+   *   Go to **Project Settings (⚙️) > Service Accounts**.
+   *   Click **Generate new private key** and download the JSON file.
+   *   Rename the file to `serviceAccountKey.json` and place it in the root directory of this project.
 
-4. **Run the application**:
+4. **Initialize / Seed Database**:
+   Run the following script to create sample properties and a staff account:
+   ```bash
+   python seed_database.py
+   ```
+
+5. **Run the application**:
    ```bash
    python app.py
    ```

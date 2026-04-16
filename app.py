@@ -1,4 +1,5 @@
 import os
+import random
 from io import BytesIO
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash, send_file
 from flask_cors import CORS
@@ -7,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, storage
 
 try:
     from fpdf import FPDF
@@ -26,15 +27,16 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['REMEMBER_COOKIE_SECURE'] = False
 
 # ── Firebase ──────────────────────────────────────────────────────────────────
+STORAGE_BUCKET = 'rental-management-system-1d17f.appspot.com'
 try:
     if not firebase_admin._apps:
         cred_path = 'serviceAccountKey.json'
         if os.path.exists(cred_path):
             cred = credentials.Certificate(cred_path)
-            firebase_admin.initialize_app(cred)
-            print("Firebase initialized with serviceAccountKey.json")
+            firebase_admin.initialize_app(cred, {'storageBucket': STORAGE_BUCKET})
+            print("Firebase initialized with serviceAccountKey.json + Storage")
         else:
-            firebase_admin.initialize_app()
+            firebase_admin.initialize_app(options={'storageBucket': STORAGE_BUCKET})
             print("Firebase initialized with default credentials")
     db = firestore.client()
 except Exception as e:
@@ -136,15 +138,53 @@ def add_property():
     if 'username' not in session: return jsonify({'error': 'Unauthorized'}), 401
     if db is None: return jsonify({'error': 'Database connection failed'}), 500
     try:
-        data = request.json
+        # Accept both JSON (legacy) and multipart/form-data (wizard with images)
+        if request.is_json:
+            data = request.json
+        else:
+            data = request.form
         if not data: return jsonify({'error': 'No data provided'}), 400
-        for f in ['address', 'flat_number', 'type', 'rent_amount', 'deposit_amount', 'status']:
+        for f in ['address', 'flat_number', 'rent_amount', 'deposit_amount', 'status']:
             if f not in data: return jsonify({'error': f'Missing field: {f}'}), 400
+
+        building_type = data.get('building_type', 'Apartment')
+        unit_type = data.get('type', data.get('unit_type', ''))
+
         ref = db.collection('properties').document()
-        ref.set({'address': data['address'], 'flat_number': data['flat_number'],
-                 'type': data['type'], 'rent_amount': float(data['rent_amount']),
-                 'deposit_amount': float(data['deposit_amount']), 'status': data['status'],
-                 'created_at': datetime.now().isoformat(), 'owner': session['username']})
+        prop_data = {
+            'address': data['address'],
+            'flat_number': data['flat_number'],
+            'building_type': building_type,
+            'type': unit_type,
+            'rent_amount': float(data['rent_amount']),
+            'deposit_amount': float(data['deposit_amount']),
+            'status': data['status'],
+            'created_at': datetime.now().isoformat(),
+            'owner': session['username'],
+            'images': {}
+        }
+
+        # ── Upload images to Firebase Storage ────────────────────────────────
+        image_urls = {}
+        if request.files:
+            try:
+                bucket = storage.bucket()
+                for key, file in request.files.items():
+                    if file and file.filename:
+                        # key format: img_<category>
+                        category = key[4:] if key.startswith('img_') else key
+                        ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else 'jpg'
+                        ts = datetime.now().strftime('%Y%m%d%H%M%S%f')
+                        blob_name = f'properties/{ref.id}/{category}/{ts}.{ext}'
+                        blob = bucket.blob(blob_name)
+                        blob.upload_from_file(file, content_type=file.content_type or f'image/{ext}')
+                        blob.make_public()
+                        image_urls[category] = blob.public_url
+            except Exception as img_err:
+                print(f"Image upload error (non-fatal): {img_err}")
+
+        prop_data['images'] = image_urls
+        ref.set(prop_data)
         return jsonify({'success': True, 'id': ref.id})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -158,6 +198,44 @@ def delete_property(property_id):
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/properties/<pid>/images')
+def get_property_images(pid):
+    # ── Try Firebase-stored images first ─────────────────────────────────────
+    if db is not None:
+        try:
+            doc = db.collection('properties').document(pid).get()
+            if doc.exists:
+                prop = doc.to_dict()
+                stored = prop.get('images', {})
+                building_type = prop.get('building_type', '').lower()
+
+                if stored:  # Firebase Storage URLs exist → return them
+                    return jsonify(stored)
+
+                # Commercial with no images → return empty (don't show residential fallback)
+                if 'commercial' in building_type:
+                    return jsonify({})
+        except Exception as e:
+            print(f"Error fetching property images from Firestore: {e}")
+
+    # ── Fallback: random local images (residential default) ───────────────────
+    categories = ['balcony', 'bathroom', 'bed', 'hall', 'kitchen']
+    result = {}
+    random.seed(pid)
+    base_path = os.path.join(app.static_folder, 'images')
+    for cat in categories:
+        cat_path = os.path.join(base_path, cat)
+        if os.path.exists(cat_path):
+            files = [f for f in os.listdir(cat_path)
+                     if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+            if files:
+                result[cat] = url_for('static', filename=f'images/{cat}/{random.choice(files)}')
+            else:
+                result[cat] = None
+        else:
+            result[cat] = None
+    return jsonify(result)
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  TENANTS
