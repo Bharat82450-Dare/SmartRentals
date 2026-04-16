@@ -30,6 +30,14 @@
     <div class="login-card">
         <div class="login-logo">smart<span>Rentals</span></div>
         <p class="login-subtitle"><i class="fas fa-hard-hat"></i> Maintenance Staff Login</p>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="error-msg"><i class="fas fa-exclamation-circle"></i> {{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
         {% if error %}
         <div class="error-msg"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
         {% endif %}
