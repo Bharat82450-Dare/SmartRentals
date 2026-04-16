@@ -155,6 +155,57 @@ To explore the tri-portal system, use the following default/setup credentials:
 
 ---
 
+## 🤝 Team Collaboration Guide
+
+To maintain a clean and stable codebase, all teammates (**Anshul** and **Kaushik**) must follow this workflow.
+
+### 1. Initial Setup
+Clone the repository and fetch all branches:
+```bash
+git clone https://github.com/Bharat82450-Dare/SmartRentals.git
+cd SmartRentals
+git fetch origin
+```
+
+### 2. Working on your Dedicated Branch
+**DO NOT work directly on the `main` branch.** Switch to your assigned branch immediately after cloning:
+
+*   **Anshul**: `git checkout anshul`
+*   **Kaushik**: `git checkout kaushik`
+
+### 3. Daily Workflow
+Follow these steps every time you work on a feature:
+
+1.  **Sync with Main**: Keep your branch up to date with the latest stable code.
+    ```bash
+    git checkout main
+    git pull origin main
+    git checkout [your-branch-name]
+    git merge main
+    ```
+2.  **Make Changes**: Write your code, test it locally.
+3.  **Commit**: Use descriptive commit messages.
+    ```bash
+    git add .
+    git commit -m "feat: added late fee logic to payment module"
+    ```
+4.  **Push**: Push your changes to **your branch** on GitHub.
+    ```bash
+    git push origin [your-branch-name]
+    ```
+
+### 4. Merging Code (Pull Requests)
+Once your feature is ready and tested on your branch:
+1.  Go to the [GitHub Repository](https://github.com/Bharat82450-Dare/SmartRentals).
+2.  Click on **Compare & pull request**.
+3.  Assign **@Bharat82450-Dare** as a reviewer.
+4.  Once reviewed and approved, the code will be merged into `main`.
+
+> [!WARNING]
+> Direct pushes to the `main` branch are restricted. Always use Pull Requests for merging.
+
+---
+
 ## 📄 License
 Distributed under the MIT License. See `LICENSE` for more information.
 
