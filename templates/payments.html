@@ -181,6 +181,7 @@
                                 <th>Month</th>
                                 <th>Mode</th>
                                 <th>Amount</th>
+                                <th>Late Fee</th>
                                 <th>Receipt</th>
                             </tr>
                         </thead>
@@ -192,15 +193,19 @@
                                 <td>{{ p.month }}</td>
                                 <td><span class="mode-badge">{{ p.mode }}</span></td>
                                 <td class="amount-cell">₹{{ p.amount | int }}</td>
+                                <td>{% if p.is_late %}<span style="color:#ef4444;font-weight:600;">₹{{ p.late_fee | int }}</span>{% else %}—{% endif %}</td>
                                 <td>
                                     <a href="/api/payments/{{ p.id }}/receipt" target="_blank" class="btn btn-receipt">
                                         <i class="fas fa-print"></i> Print
+                                    </a>
+                                    <a href="/api/payments/{{ p.id }}/receipt/pdf" class="btn btn-receipt" style="background:linear-gradient(135deg,#10b981,#34d399);margin-top:4px;">
+                                        <i class="fas fa-file-pdf"></i> PDF
                                     </a>
                                 </td>
                             </tr>
                             {% else %}
                             <tr>
-                                <td colspan="6" style="text-align:center;color:#999;padding:24px;">
+                                <td colspan="7" style="text-align:center;color:#999;padding:24px;">
                                     No payments recorded yet.
                                 </td>
                             </tr>

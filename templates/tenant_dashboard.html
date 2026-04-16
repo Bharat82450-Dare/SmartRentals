@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Dashboard | smartRentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root { --accent: #FF5F38; --accent-glow: rgba(255,95,56,0.4); --panel-bg: rgba(255,255,255,0.97); --border: rgba(255,255,255,0.15); --border-input: #e8eaf0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%); min-height: 100vh; color: #1a1a2e; }
+        a { text-decoration: none; color: inherit; }
+        .main-header { background: rgba(8,6,28,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
+        .page-container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
+        .logo span { color: var(--accent); }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .tenant-name-badge { color: rgba(255,255,255,0.85); font-size: 0.9rem; }
+        .btn-logout { background: linear-gradient(135deg, var(--accent), #ff8a65); color: white; border-radius: 8px; padding: 7px 16px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 12px var(--accent-glow); }
+        .page-wrapper { padding: 40px 24px 60px; max-width: 1100px; margin: 0 auto; }
+        .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
+        .page-title span { color: var(--accent); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
+        .panel.full { grid-column: 1 / -1; }
+        .panel h2 { font-size: 1.15rem; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
+        .info-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f3f9; font-size: 0.9rem; color: #444; }
+        .info-row:last-child { border-bottom: none; }
+        .info-row i { color: var(--accent); width: 18px; }
+        .info-label { color: #888; font-size: 0.82rem; width: 120px; flex-shrink: 0; }
+        .info-value { font-weight: 600; color: #1a1a2e; }
+        .status-active { display: inline-block; padding: 3px 10px; border-radius: 20px; background: #d1fae5; color: #065f46; font-size: 0.76rem; font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8f9ff; color: #1a1a2e; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border-bottom: 2px solid #edf0f7; }
+        td { padding: 11px 12px; border-bottom: 1px solid #f1f3f9; font-size: 0.88rem; color: #444; }
+        tbody tr:hover { background: #fafbff; }
+        .amount-cell { font-weight: 700; color: #065f46; }
+        .mode-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: #ede9fe; color: #5b21b6; }
+        .btn-receipt { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 10px; font-size: 0.78rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; font-weight: 600; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: #555; }
+        .form-control { width: 100%; padding: 10px 14px; border: 2px solid var(--border-input); border-radius: 8px; font-family: inherit; font-size: 0.93rem; transition: border-color 0.2s; background: #fafbfc; color: #1a1a2e; }
+        .form-control:focus { outline: none; border-color: var(--accent); background: #fff; }
+        textarea.form-control { resize: vertical; min-height: 90px; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), #ff8a65); color: white; box-shadow: 0 4px 15px var(--accent-glow); border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.25s; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .pill-open { background: #fee2e2; color: #b91c1c; }
+        .pill-in-progress { background: #fef3c7; color: #92400e; }
+        .pill-resolved { background: #d1fae5; color: #065f46; }
+        .no-data { text-align: center; color: #999; padding: 20px 0; font-size: 0.9rem; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="page-container">
+            <a href="/tenant/dashboard" class="logo">smart<span>Rentals</span></a>
+            <div class="header-right">
+                <span class="tenant-name-badge"><i class="fas fa-user-circle"></i> {{ tenant.name }}</span>
+                <a href="/tenant/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <h1 class="page-title">My <span>Dashboard</span></h1>
+
+        <div class="grid-2">
+            <!-- Tenant Info -->
+            <div class="panel">
+                <h2><i class="fas fa-user-circle" style="color:var(--accent)"></i> My Profile</h2>
+                <div class="info-row"><i class="fas fa-user"></i><span class="info-label">Name</span><span class="info-value">{{ tenant.name }}</span></div>
+                <div class="info-row"><i class="fas fa-phone-alt"></i><span class="info-label">Phone</span><span class="info-value">{{ tenant.phone }}</span></div>
+                <div class="info-row"><i class="fas fa-envelope"></i><span class="info-label">Email</span><span class="info-value">{{ tenant.email }}</span></div>
+                {% if tenant.occupation %}
+                <div class="info-row"><i class="fas fa-briefcase"></i><span class="info-label">Occupation</span><span class="info-value">{{ tenant.occupation }}</span></div>
+                {% endif %}
+                <div class="info-row"><i class="fas fa-users"></i><span class="info-label">Family</span><span class="info-value">{{ tenant.family_members }} member(s)</span></div>
+            </div>
+
+            <!-- Active Agreement -->
+            <div class="panel">
+                <h2><i class="fas fa-file-contract" style="color:var(--accent)"></i> Active Lease</h2>
+                {% if agreement %}
+                <div class="info-row"><i class="fas fa-home"></i><span class="info-label">Property</span><span class="info-value">{{ agreement.property_label }}</span></div>
+                <div class="info-row"><i class="fas fa-rupee-sign"></i><span class="info-label">Monthly Rent</span><span class="info-value">₹{{ agreement.rent_amount }}</span></div>
+                <div class="info-row"><i class="far fa-calendar-alt"></i><span class="info-label">Start Date</span><span class="info-value">{{ agreement.start_date }}</span></div>
+                <div class="info-row"><i class="far fa-calendar-check"></i><span class="info-label">End Date</span><span class="info-value">{{ agreement.end_date }}</span></div>
+                <div class="info-row"><i class="fas fa-circle"></i><span class="info-label">Status</span><span class="info-value"><span class="status-active">Active</span></span></div>
+                <div class="info-row"><i class="fas fa-calendar-day"></i><span class="info-label">Due Day</span><span class="info-value">{{ agreement.due_day }}th of month</span></div>
+                {% else %}
+                <p class="no-data"><i class="fas fa-file-times" style="font-size:1.8rem;display:block;margin-bottom:8px;color:#ddd;"></i>No active lease agreement.</p>
+                {% endif %}
+            </div>
+
+            <!-- Payment History -->
+            <div class="panel full" style="animation-delay:0.1s">
+                <h2><i class="fas fa-history" style="color:var(--accent)"></i> Payment History</h2>
+                {% if payments %}
+                <div style="overflow-x:auto">
+                <table>
+                    <thead>
+                        <tr><th>Date</th><th>Month</th><th>Amount</th><th>Mode</th><th>Late Fee</th><th>Receipt</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for p in payments %}
+                        <tr>
+                            <td>{{ p.payment_date[:10] }}</td>
+                            <td>{{ p.month }}</td>
+                            <td class="amount-cell">₹{{ p.amount | int }}</td>
+                            <td><span class="mode-badge">{{ p.mode }}</span></td>
+                            <td>{% if p.is_late %}<span style="color:#ef4444;font-weight:600;">₹{{ p.late_fee | int }}</span>{% else %}—{% endif %}</td>
+                            <td>
+                                <a href="/api/payments/{{ p.id }}/receipt" target="_blank" class="btn-receipt"><i class="fas fa-print"></i> Print</a>
+                                <a href="/api/payments/{{ p.id }}/receipt/pdf" class="btn-receipt" style="background:linear-gradient(135deg,#10b981,#34d399);margin-left:4px;"><i class="fas fa-file-pdf"></i> PDF</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                {% else %}
+                <p class="no-data">No payments recorded yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- Raise Complaint -->
+            <div class="panel" style="animation-delay:0.15s">
+                <h2><i class="fas fa-tools" style="color:var(--accent)"></i> Raise a Complaint</h2>
+                <form id="complaintForm">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="category" class="form-control">
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Appliance">Appliance</option>
+                            <option value="Structural">Structural</option>
+                            <option value="Pest Control">Pest Control</option>
+                            <option value="Noise">Noise</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="description" class="form-control" required placeholder="Describe the issue…"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Submit</button>
+                </form>
+            </div>
+
+            <!-- My Complaints -->
+            <div class="panel" style="animation-delay:0.2s">
+                <h2><i class="fas fa-clipboard-list" style="color:var(--accent)"></i> My Complaints</h2>
+                {% if complaints %}
+                    {% for c in complaints %}
+                    <div style="border:1px solid #edf0f7;border-radius:10px;padding:14px;margin-bottom:12px;border-left:4px solid {% if c.status=='Open' %}#ef4444{% elif c.status=='In Progress' %}#f59e0b{% else %}#10b981{% endif %}">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                            <span style="font-weight:600;font-size:0.9rem;">{{ c.category }}</span>
+                            <span class="status-pill {% if c.status=='Open' %}pill-open{% elif c.status=='In Progress' %}pill-in-progress{% else %}pill-resolved{% endif %}">{{ c.status }}</span>
+                        </div>
+                        <p style="font-size:0.85rem;color:#555;">{{ c.description }}</p>
+                        <p style="font-size:0.78rem;color:#999;margin-top:6px;"><i class="far fa-clock"></i> {{ c.created_at[:10] }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <p class="no-data">No complaints raised yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+            return match ? decodeURIComponent(match.split('=')[1]) : null;
+        }
+        document.getElementById('complaintForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                category: document.getElementById('category').value,
+                description: document.getElementById('description').value,
+                from_tenant_portal: true
+            };
+            try {
+                const res = await fetch('/api/complaints', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrf_token') },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) { alert('Complaint submitted!'); window.location.reload(); }
+                else alert('Error: ' + result.error);
+            } catch (err) { alert('Something went wrong!'); }
+        });
+    </script>
+</body>
+</html>

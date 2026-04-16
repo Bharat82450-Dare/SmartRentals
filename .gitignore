@@ -1,13 +1,14 @@
-# Python
+# ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
+
+# ── Build / packaging ─────────────────────────────────────────────────────────
 build/
-develop-eggs/
 dist/
+develop-eggs/
 downloads/
 eggs/
 .eggs/
@@ -20,33 +21,57 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Flask
-instance/
-.webassets-cache
-
-# Environments
+# ── Virtual environments ──────────────────────────────────────────────────────
 .env
 .venv
 env/
 venv/
 ENV/
 
-# Project specific
-tmp/
-.vscode/
-.idea/
+# ── Flask ─────────────────────────────────────────────────────────────────────
+instance/
+.webassets-cache
+flask_session/
+
+# ── Secrets & credentials ─────────────────────────────────────────────────────
+serviceAccountKey.json
+*.pem
+*.key
+.env.*
+!.env.example
+
+# ── Logs & databases ──────────────────────────────────────────────────────────
+*.log
+*.sqlite3
+*.db
+
+# ── Generated files ───────────────────────────────────────────────────────────
+*.pdf
+static/uploads/
+
+# ── Testing & coverage ────────────────────────────────────────────────────────
 .pytest_cache/
 .coverage
 htmlcov/
-nosetests.xml
 coverage.xml
+nosetests.xml
 *.cover
 .hypothesis/
 
-# Firebase
-serviceAccountKey.json
+# ── IDEs & editors ───────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Large data files
-server/bengaluru_house_prices.csv
-server/artifacts/
+# ── OS files ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+tmp/
+node_modules/

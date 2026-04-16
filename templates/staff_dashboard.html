@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Dashboard | smartRentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root { --accent: #FF5F38; --accent-glow: rgba(255,95,56,0.4); --panel-bg: rgba(255,255,255,0.97); --border: rgba(255,255,255,0.15); --border-input: #e8eaf0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%); min-height: 100vh; color: #1a1a2e; }
+        a { text-decoration: none; color: inherit; }
+        .main-header { background: rgba(8,6,28,0.88); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
+        .page-container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+        .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
+        .logo span { color: var(--accent); }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .staff-badge { color: rgba(255,255,255,0.85); font-size: 0.9rem; }
+        .btn-logout { background: linear-gradient(135deg, var(--accent), #ff8a65); color: white; border-radius: 8px; padding: 7px 16px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 12px var(--accent-glow); }
+        .page-wrapper { padding: 40px 24px 60px; max-width: 1000px; margin: 0 auto; }
+        .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
+        .page-title span { color: var(--accent); }
+        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
+        .panel h2 { font-size: 1.15rem; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
+        .complaints-list { display: flex; flex-direction: column; gap: 16px; }
+        .complaint-card { border: 1px solid #edf0f7; border-radius: 12px; padding: 20px; background: #fff; border-left: 4px solid #e8eaf0; }
+        .complaint-card.open { border-left-color: #ef4444; }
+        .complaint-card.in-progress { border-left-color: #f59e0b; }
+        .complaint-card.resolved { border-left-color: #10b981; opacity: 0.8; }
+        .complaint-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+        .complaint-header h3 { font-size: 1rem; font-weight: 700; color: #1a1a2e; }
+        .meta { display: flex; gap: 8px; flex-wrap: wrap; }
+        .category-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.74rem; font-weight: 600; background: #ede9fe; color: #5b21b6; }
+        .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .pill-open { background: #fee2e2; color: #b91c1c; }
+        .pill-in-progress { background: #fef3c7; color: #92400e; }
+        .pill-resolved { background: #d1fae5; color: #065f46; }
+        .complaint-body { font-size: 0.88rem; color: #555; line-height: 1.6; margin-bottom: 14px; }
+        .complaint-footer { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .complaint-info { font-size: 0.78rem; color: #999; }
+        .action-area { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+        .note-input { padding: 8px 12px; border: 2px solid #e8eaf0; border-radius: 8px; font-family: inherit; font-size: 0.85rem; width: 260px; }
+        .note-input:focus { outline: none; border-color: var(--accent); }
+        .btn { padding: 7px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all 0.25s; font-size: 0.82rem; }
+        .btn-wip { background: linear-gradient(135deg, #f59e0b, #fcd34d); color: #78350f; }
+        .btn-resolve { background: linear-gradient(135deg, #10b981, #34d399); color: white; }
+        .btn-row { display: flex; gap: 8px; }
+        .no-complaints { text-align: center; color: #999; padding: 40px 0; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="page-container">
+            <a href="/staff/dashboard" class="logo">smart<span>Rentals</span></a>
+            <div class="header-right">
+                <span class="staff-badge"><i class="fas fa-hard-hat"></i> {{ staff.name }}</span>
+                <a href="/staff/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <h1 class="page-title">My <span>Assigned Complaints</span></h1>
+        <div class="panel">
+            <h2><i class="fas fa-clipboard-list" style="color:var(--accent)"></i> Complaints Assigned to Me</h2>
+            <div class="complaints-list">
+                {% if complaints %}
+                    {% for c in complaints %}
+                    <div class="complaint-card {{ c.status | lower | replace(' ', '-') }}" id="c-{{ c.id }}">
+                        <div class="complaint-header">
+                            <h3><i class="fas fa-user-circle" style="color:var(--accent)"></i>
+                                {{ c.tenant_name if c.tenant_name else 'Unknown' }}
+                                {% if c.property_ref %}<span style="font-weight:400;color:#888;font-size:0.88rem;"> — {{ c.property_ref }}</span>{% endif %}
+                            </h3>
+                            <div class="meta">
+                                <span class="category-tag">{{ c.category }}</span>
+                                <span class="status-pill {% if c.status=='Open' %}pill-open{% elif c.status=='In Progress' %}pill-in-progress{% else %}pill-resolved{% endif %}">{{ c.status }}</span>
+                            </div>
+                        </div>
+                        <p class="complaint-body">{{ c.description }}</p>
+                        {% if c.resolution_note %}
+                        <p style="font-size:0.85rem;color:#065f46;background:#d1fae5;border-radius:6px;padding:8px 12px;margin-bottom:12px;"><i class="fas fa-check-circle"></i> <strong>Resolution:</strong> {{ c.resolution_note }}</p>
+                        {% endif %}
+                        <div class="complaint-footer">
+                            <span class="complaint-info"><i class="far fa-clock"></i> {{ c.created_at[:10] }}</span>
+                            {% if c.status != 'Resolved' %}
+                            <div class="action-area">
+                                <input type="text" class="note-input" id="note-{{ c.id }}" placeholder="Resolution note (optional)">
+                                <div class="btn-row">
+                                    {% if c.status != 'In Progress' %}
+                                    <button class="btn btn-wip" onclick="updateStatus('{{ c.id }}', 'In Progress')">
+                                        <i class="fas fa-spinner"></i> In Progress
+                                    </button>
+                                    {% endif %}
+                                    <button class="btn btn-resolve" onclick="updateStatus('{{ c.id }}', 'Resolved')">
+                                        <i class="fas fa-check"></i> Mark Resolved
+                                    </button>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="no-complaints">
+                    <i class="fas fa-check-circle" style="font-size:2.5rem;color:#d1fae5;display:block;margin-bottom:12px;"></i>
+                    No complaints assigned to you. Great job!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+            return match ? decodeURIComponent(match.split('=')[1]) : null;
+        }
+        async function updateStatus(id, status) {
+            const note = document.getElementById('note-' + id)?.value || '';
+            try {
+                const res = await fetch(`/api/complaints/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrf_token') },
+                    body: JSON.stringify({ status, resolution_note: note })
+                });
+                if ((await res.json()).success) window.location.reload();
+                else alert('Failed to update.');
+            } catch (err) { alert('Error occurred.'); }
+        }
+    </script>
+</body>
+</html>

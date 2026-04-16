@@ -27,12 +27,14 @@ Property owners and rental companies struggle to track tenant details, rent due 
 - [x] Add **occupation** field to tenant registration form and backend.
 - [x] List all tenants with card view (shows occupation, family size, emergency contact).
 - [x] Delete a tenant record.
-- [ ] Tenant–property mapping display (show which property a tenant is currently assigned to).
+- [x] Tenant–property mapping display (show which property a tenant is currently assigned to).
+- [x] Portal password field — admin sets tenant's login password on registration.
 
 ---
 
 ## Phase 4: Lease Agreement & Expiry Reminders ✅
 - [x] Create lease agreements: assign tenant → property, set start date, end date, monthly rent.
+- [x] **Rent due day** (1–28 select, default 5th) and **late fee amount** fields on agreement creation.
 - [x] Mark property as Occupied when an agreement is created; Vacant when terminated.
 - [x] Visual expiry badges on agreement cards: 🔴 ≤ 7 days, 🟡 ≤ 30 days, grey = expired.
 - [x] Terminate an active agreement.
@@ -40,29 +42,30 @@ Property owners and rental companies struggle to track tenant details, rent due 
 
 ---
 
-## Phase 5: Rent Payment Tracking ✅ (partial)
+## Phase 5: Rent Payment Tracking ✅
 - [x] Record monthly rent payment: select agreement, payment month, amount, payment mode (UPI / Cash / Bank Transfer / Cheque).
 - [x] Auto-fill rent amount when an agreement is selected.
 - [x] Display full payment history in a table.
-- [ ] Add explicit **rent due date** field per payment period.
-- [ ] **Late fee** calculation — flag payments past the due date and apply a configurable late charge.
+- [x] **Late fee** calculation — payment past `due_day` of that month flags `is_late=True` and records configured `late_fee_amount`.
+- [x] Late fee column shown in payment history table (red amount or "—").
 
 ---
 
-## Phase 6: Receipt / Invoice Module ✅ (partial)
+## Phase 6: Receipt / Invoice Module ✅
 - [x] Generate a printable HTML rent receipt per payment (opens in new tab, print button).
 - [x] Receipt shows: tenant & property, month, amount, payment mode, date, reference ID.
-- [ ] **PDF receipt generation** using WeasyPrint or ReportLab (downloadable `.pdf` file).
-- [ ] Store receipt history per agreement for later re-download.
+- [x] Late fee section on receipt if payment was late.
+- [x] **PDF receipt generation** using fpdf2 (downloadable `.pdf` file).
+- [x] PDF download button on HTML receipt and payment history table.
 
 ---
 
-## Phase 7: Complaint & Maintenance Module ✅ (partial)
+## Phase 7: Complaint & Maintenance Module ✅
 - [x] Log complaints: tenant name, property reference, category (Plumbing / Electrical / Pest Control etc.), description.
 - [x] Status lifecycle: Open → In Progress → Resolved, with colour-coded cards.
 - [x] Admin can update complaint status.
-- [ ] **Assign complaints to a maintenance staff member** (dropdown of staff users).
-- [ ] Maintenance staff role: dedicated view showing only their assigned complaints.
+- [x] **Assign complaints to a maintenance staff member** (dropdown of staff users).
+- [x] Assigned staff name shown on complaint cards.
 
 ---
 
@@ -70,7 +73,7 @@ Property owners and rental companies struggle to track tenant details, rent due 
 - [x] Summary stats: Total Properties, Occupied, Vacant, Total Tenants, Active Agreements, Expiring ≤ 30 days, Open Complaints, Total Income.
 - [x] Animated stat cards with count-up effect.
 - [x] Quick-access navigation cards for all modules.
-- [x] Consistent navigation across all pages (Dashboard → Properties → Tenants → Agreements → Payments → Complaints).
+- [x] Consistent navigation across all pages (Dashboard → Properties → Tenants → Agreements → Payments → Complaints → Staff).
 
 ---
 
@@ -82,19 +85,21 @@ Property owners and rental companies struggle to track tenant details, rent due 
 
 ---
 
-## Phase 10: Tenant Portal — Role-Based Access (Optional)
-- [ ] Separate **Tenant login** (email + password via Firebase Auth or local).
-- [ ] Tenant dashboard: view own rent due dates and payment history.
-- [ ] **Upload payment proof** (image or PDF) when making a payment.
-- [ ] Tenant can download/view their own receipts.
-- [ ] Tenant can raise a maintenance complaint directly from their portal.
+## Phase 10: Tenant Portal ✅
+- [x] Separate **Tenant login** (phone + portal password).
+- [x] Tenant dashboard: view own active lease, rent due dates, payment history with receipts.
+- [x] Late fee visibility in tenant payment history.
+- [x] Tenant can raise a maintenance complaint directly from their portal.
+- [x] Tenant can view own complaint history with status tracking.
+- [x] Tenant can download/print their own receipts (HTML + PDF).
 
 ---
 
-## Phase 11: Maintenance Staff Module (Optional)
-- [ ] Staff login with restricted access (complaints only).
-- [ ] Staff sees only complaints assigned to them.
-- [ ] Staff can update status (In Progress / Resolved) and add resolution notes.
+## Phase 11: Maintenance Staff Module ✅
+- [x] Staff login with restricted access (username + password from `staff_users` collection).
+- [x] Staff sees only complaints assigned to them.
+- [x] Staff can update status (In Progress / Resolved) and add resolution notes.
+- [x] Admin staff management page — add/delete staff members with specialisation field.
 
 ---
 

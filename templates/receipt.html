@@ -162,8 +162,19 @@
                 For queries, contact your property manager.
             </p>
 
+            {% if payment.is_late %}
+            <div style="background:#fee2e2;border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
+                <i class="fas fa-exclamation-triangle" style="color:#b91c1c;font-size:1.2rem;"></i>
+                <div>
+                    <strong style="color:#b91c1c;font-size:0.9rem;">Late Payment</strong>
+                    <p style="font-size:0.83rem;color:#991b1b;margin-top:2px;">Late fee applied: <strong>₹{{ payment.late_fee | int }}</strong></p>
+                </div>
+            </div>
+            {% endif %}
+
             <div class="print-btn">
                 <button class="btn btn-back" onclick="window.close()">&#8592; Close</button>
+                <a href="/api/payments/{{ payment.id }}/receipt/pdf" class="btn" style="background:linear-gradient(135deg,#10b981,#34d399);color:white;box-shadow:0 4px 15px rgba(16,185,129,0.35);display:inline-block;">&#128462; Download PDF</a>
                 <button class="btn btn-print" onclick="window.print()">&#128438; Print Receipt</button>
             </div>
         </div>

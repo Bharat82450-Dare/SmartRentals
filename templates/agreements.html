@@ -184,6 +184,18 @@
                         <label>End Date</label>
                         <input type="date" id="end_date" class="form-control" required>
                     </div>
+                    <div class="form-group">
+                        <label>Rent Due Day (of month)</label>
+                        <select id="due_day" class="form-control">
+                            {% for d in range(1, 29) %}
+                            <option value="{{ d }}" {% if d == 5 %}selected{% endif %}>{{ d }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Late Fee Amount (₹)</label>
+                        <input type="number" id="late_fee_amount" class="form-control" value="0" min="0" placeholder="e.g. 500">
+                    </div>
                     <button type="submit" class="btn btn-primary">Create Lease Agreement</button>
                 </form>
             </div>
@@ -246,7 +258,9 @@
                 property_label: propSel.options[propSel.selectedIndex].text,
                 start_date: document.getElementById('start_date').value,
                 end_date: document.getElementById('end_date').value,
-                rent_amount: document.getElementById('rent_amount').value
+                rent_amount: document.getElementById('rent_amount').value,
+                due_day: document.getElementById('due_day').value,
+                late_fee_amount: document.getElementById('late_fee_amount').value
             };
             try {
                 const res = await fetch('/api/agreements', {

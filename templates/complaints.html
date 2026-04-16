@@ -183,6 +183,15 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Assign To (Staff)</label>
+                        <select id="assigned_to" class="form-control">
+                            <option value="">— Unassigned —</option>
+                            {% for s in staff_list %}
+                            <option value="{{ s.name }}">{{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Description <span style="color:#ef4444">*</span></label>
                         <textarea id="description" class="form-control" required placeholder="Describe the issue in detail…"></textarea>
                     </div>
@@ -221,6 +230,11 @@
                                 <span class="complaint-info">
                                     <i class="far fa-clock"></i> {{ c.created_at[:10] }}
                                 </span>
+                                {% if c.assigned_to %}
+                                <span class="complaint-info" style="color:#764ba2;">
+                                    <i class="fas fa-user-hard-hat"></i> {{ c.assigned_to }}
+                                </span>
+                                {% endif %}
                                 <div class="action-btns">
                                     {% if c.status != 'In Progress' and c.status != 'Resolved' %}
                                     <button class="btn btn-wip btn-sm" onclick="updateStatus('{{ c.id }}', 'In Progress')">
@@ -259,7 +273,8 @@
                 tenant_name: document.getElementById('tenant_name').value,
                 property_ref: document.getElementById('property_ref').value,
                 category: document.getElementById('category').value,
-                description: document.getElementById('description').value
+                description: document.getElementById('description').value,
+                assigned_to: document.getElementById('assigned_to').value
             };
             try {
                 const res = await fetch('/api/complaints', {

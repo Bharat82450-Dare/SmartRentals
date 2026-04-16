@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Management | smartRentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root { --accent: #FF5F38; --accent-glow: rgba(255,95,56,0.4); --panel-bg: rgba(255,255,255,0.97); --border: rgba(255,255,255,0.15); --border-input: #e8eaf0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%); min-height: 100vh; color: #1a1a2e; }
+        a { text-decoration: none; color: inherit; }
+        .main-header { background: rgba(8,6,28,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 1000; }
+        .page-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .main-header .page-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.7rem; font-weight: 700; color: #fff; }
+        .logo span { color: var(--accent); }
+        .main-nav ul { list-style: none; display: flex; gap: 4px; align-items: center; }
+        .main-nav a { color: rgba(255,255,255,0.75); font-weight: 500; font-size: 0.9rem; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+        .main-nav a:hover, .main-nav a.active { color: #fff; background: rgba(255,255,255,0.1); }
+        .btn-logout { background: linear-gradient(135deg, var(--accent), #ff8a65) !important; color: white !important; border-radius: 8px !important; box-shadow: 0 4px 12px var(--accent-glow); font-weight: 600 !important; }
+        .page-wrapper { padding: 40px 24px 60px; max-width: 1280px; margin: 0 auto; }
+        .page-title { color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; animation: fadeInUp 0.4s ease both; }
+        .page-title span { color: var(--accent); }
+        .layout { display: flex; gap: 24px; align-items: flex-start; }
+        .panel { background: var(--panel-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05); padding: 28px; animation: fadeInUp 0.5s ease both; }
+        .form-panel { flex: 0 0 320px; }
+        .list-panel { flex: 1; min-width: 0; animation-delay: 0.1s; }
+        .panel h2 { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 22px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.88rem; color: #555; }
+        .form-control { width: 100%; padding: 10px 14px; border: 2px solid var(--border-input); border-radius: 8px; font-family: inherit; font-size: 0.93rem; transition: border-color 0.2s; background: #fafbfc; color: #1a1a2e; }
+        .form-control:focus { outline: none; border-color: var(--accent); background: #fff; }
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all 0.25s; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), #ff8a65); color: white; box-shadow: 0 4px 15px var(--accent-glow); width: 100%; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #f87171); color: white; box-shadow: 0 3px 10px rgba(239,68,68,0.3); }
+        .btn-danger:hover { transform: translateY(-2px); }
+        .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+        .staff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 4px; }
+        .staff-card { border: 1px solid #edf0f7; border-radius: 12px; padding: 20px; background: #fff; border-top: 4px solid #764ba2; transition: all 0.25s; }
+        .staff-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.1); }
+        .staff-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; }
+        .staff-card h3 { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+        .staff-card p { font-size: 0.85rem; color: #666; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .staff-card p i { color: #764ba2; width: 14px; }
+        .card-actions { margin-top: 14px; display: flex; justify-content: flex-end; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 900px) { .layout { flex-direction: column; } .form-panel { flex: none; width: 100%; } }
+        @media (max-width: 768px) { .main-nav a { font-size: 0.78rem; padding: 5px 7px; } }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="page-container">
+            <a href="/dashboard" class="logo">smart<span>Rentals</span></a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/properties">Properties</a></li>
+                    <li><a href="/tenants">Tenants</a></li>
+                    <li><a href="/agreements">Agreements</a></li>
+                    <li><a href="/payments">Payments</a></li>
+                    <li><a href="/complaints">Complaints</a></li>
+                    <li><a href="/admin/staff" class="active">Staff</a></li>
+                    <li><a href="/logout" class="btn-logout" style="display:inline-block;padding:7px 16px;">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <h1 class="page-title"><i class="fas fa-hard-hat"></i> Maintenance <span>Staff</span></h1>
+        <div class="layout">
+            <div class="panel form-panel">
+                <h2><i class="fas fa-user-plus" style="color:var(--accent)"></i> Add Staff Member</h2>
+                <form id="addStaffForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="name" class="form-control" required placeholder="e.g. Ravi Kumar">
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="username" class="form-control" required placeholder="Login username">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="+91 XXXXX XXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Specialisation</label>
+                        <select id="specialisation" class="form-control">
+                            <option value="General">General</option>
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Pest Control">Pest Control</option>
+                            <option value="Structural">Structural</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" class="form-control" required placeholder="Set a login password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Staff Member</button>
+                </form>
+            </div>
+
+            <div class="panel list-panel">
+                <h2><i class="fas fa-users-cog" style="color:var(--accent)"></i> All Staff Members</h2>
+                <div class="staff-grid" id="staffGrid">
+                    {% if staff_list %}
+                        {% for s in staff_list %}
+                        <div class="staff-card" id="staff-{{ s.id }}">
+                            <div class="staff-avatar">{{ s.name[0] | upper }}</div>
+                            <h3>{{ s.name }}</h3>
+                            <p><i class="fas fa-at"></i> {{ s.username }}</p>
+                            {% if s.phone %}
+                            <p><i class="fas fa-phone-alt"></i> {{ s.phone }}</p>
+                            {% endif %}
+                            <p><i class="fas fa-tools"></i> {{ s.specialisation }}</p>
+                            <div class="card-actions">
+                                <button class="btn btn-danger btn-sm" onclick="deleteStaff('{{ s.id }}')">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color:#999;padding:16px 0;grid-column:1/-1;">No staff members added yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+            return match ? decodeURIComponent(match.split('=')[1]) : null;
+        }
+
+        document.getElementById('addStaffForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('name').value,
+                username: document.getElementById('username').value,
+                phone: document.getElementById('phone').value,
+                specialisation: document.getElementById('specialisation').value,
+                password: document.getElementById('password').value
+            };
+            try {
+                const res = await fetch('/api/admin/staff', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrf_token') },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) { alert('Staff member added!'); window.location.reload(); }
+                else alert('Error: ' + result.error);
+            } catch (err) { alert('Something went wrong!'); }
+        });
+
+        async function deleteStaff(id) {
+            if (!confirm('Remove this staff member?')) return;
+            try {
+                const res = await fetch(`/api/admin/staff/${id}`, {
+                    method: 'DELETE', headers: { 'X-CSRFToken': getCookie('csrf_token') }
+                });
+                if ((await res.json()).success) document.getElementById(`staff-${id}`).remove();
+                else alert('Failed to remove staff member.');
+            } catch (err) { alert('Error occurred.'); }
+        }
+    </script>
+</body>
+</html>
