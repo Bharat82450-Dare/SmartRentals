@@ -1,6 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
+from werkzeug.security import generate_password_hash
 import os
 
 def seed():
@@ -58,7 +59,7 @@ def seed():
             {
                 'name': 'John Plumber',
                 'username': 'john_p',
-                'password_hash': 'pbkdf2:sha256:260000$p8D3gW5H$58d7d4c9f1a23e8b4d8c6b7a9e0f1c2d3a4b5c6d7e8f9a0b1c2d3a4b5c6d7e8f', # hash for 'staff123'
+                'password_hash': generate_password_hash('staff123'), # password is 'staff123'
                 'created_at': datetime.now().isoformat()
             }
         ]
