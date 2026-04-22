@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    container_name: smartrentals_web
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount the current directory to /app for live reloading during development
+      - .:/app
+      # Ensure node_modules and other generated folders in container aren't overwritten
+      - /app/__pycache__
+    environment:
+      - FLASK_ENV=development
+      - PYTHONUNBUFFERED=1
+      # Add any other environment variables here, like SECRET_KEY
+    restart: unless-stopped

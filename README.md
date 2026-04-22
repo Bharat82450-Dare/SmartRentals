@@ -148,10 +148,17 @@ To explore the tri-portal system, use the following default/setup credentials:
    ```
 
 5. **Run the application**:
+   
+   **Using Python (Locally):**
    ```bash
    python app.py
    ```
-   Access the dashboard at `http://127.0.0.1:5000`.
+   
+   **Using Docker (Recommended):**
+   ```bash
+   docker-compose up --build
+   ```
+   Access the dashboard at `http://127.0.0.1:5000` (or `http://localhost:5000`).
 
 ---
 
