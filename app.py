@@ -11,7 +11,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, storage
 from firebase_admin import auth
 import requests
-FIREBASE_API_KEY = os.getenv('FIREBASE_API_KEY')
+FIREBASE_API_KEY = os.getenv('FIREBASE_API_KEY', 'AIzaSyAq0cWswfPyWubUkCrAOVW5IDtQIL46hRE')
 
 try:
     from fpdf import FPDF
@@ -30,7 +30,9 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['REMEMBER_COOKIE_SECURE'] = False
 
 # ── Firebase ──────────────────────────────────────────────────────────────────
-STORAGE_BUCKET = 'rental-management-system-1d17f.appspot.com'
+STORAGE_BUCKET = 'rental-management-system-d5249.firebasestorage.app'
+
+
 try:
     if not firebase_admin._apps:
         cred_path = 'serviceAccountKey.json'
