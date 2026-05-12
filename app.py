@@ -35,14 +35,27 @@ STORAGE_BUCKET = 'rental-management-system-d5249.firebasestorage.app'
 
 try:
     if not firebase_admin._apps:
-        cred_path = 'serviceAccountKey.json'
-        if os.path.exists(cred_path):
-            cred = credentials.Certificate(cred_path)
+        cred = None
+        # Try environment variable first (best for Vercel)
+        service_account_json = os.getenv('FIREBASE_SERVICE_ACCOUNT')
+        if service_account_json:
+            import json
+            cred_dict = json.loads(service_account_json)
+            cred = credentials.Certificate(cred_dict)
+            print("Firebase initialized with FIREBASE_SERVICE_ACCOUNT env var")
+        
+        # Fallback to local file
+        elif os.path.exists('serviceAccountKey.json'):
+            cred = credentials.Certificate('serviceAccountKey.json')
+            print("Firebase initialized with serviceAccountKey.json")
+            
+        if cred:
             firebase_admin.initialize_app(cred, {'storageBucket': STORAGE_BUCKET})
-            print("Firebase initialized with serviceAccountKey.json + Storage")
         else:
+            # Final fallback to default credentials (will likely fail on Vercel but okay for local)
             firebase_admin.initialize_app(options={'storageBucket': STORAGE_BUCKET})
             print("Firebase initialized with default credentials")
+
     db = firestore.client()
 except Exception as e:
     print(f"Warning: Firebase initialization failed. Error: {e}")
