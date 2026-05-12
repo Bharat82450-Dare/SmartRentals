@@ -9,6 +9,9 @@ from datetime import datetime
 
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
+from firebase_admin import auth
+import requests
+FIREBASE_API_KEY = os.getenv('FIREBASE_API_KEY')
 
 try:
     from fpdf import FPDF
@@ -44,12 +47,9 @@ except Exception as e:
     db = None
 
 # ── Admin credentials (in-memory; move to Firebase for production) ────────────
-users = {
-    "admin": {
-        "password": generate_password_hash("admin123"),
-        "email": "admin@example.com",
-    }
-}
+# ── Admin Auth now handled via Firebase ───────────────────────────────────────
+# Legacy in-memory users dictionary removed.
+
 
 # ── CSRF cookie ───────────────────────────────────────────────────────────────
 @app.after_request
@@ -73,35 +73,60 @@ def login():
         return redirect(url_for('dashboard'))
     if request.method == 'POST':
         data = request.get_json() if request.is_json else request.form
-        username, password = data.get('username'), data.get('password')
-        user = users.get(username)
-        if user and check_password_hash(user['password'], password):
-            session['username'] = username
+        email = data.get('email')
+        password = data.get('password')
+        # Verify with Firebase Auth REST API
+        try:
+            resp = requests.post(
+                f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}",
+                json={'email': email, 'password': password, 'returnSecureToken': True},
+                timeout=5
+            )
+            resp.raise_for_status()
+            user_info = resp.json()
+            # Successful login
+            session['uid'] = user_info.get('localId')
+            session['username'] = user_info.get('displayName') or user_info.get('email')
             session.permanent = True
+
             if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return jsonify({'success': True, 'redirect': url_for('dashboard')})
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
-        if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return jsonify({'error': 'Invalid username or password'}), 401
-        flash('Invalid username or password', 'error')
-        return redirect(url_for('login'))
+        except Exception:
+            # Authentication failed
+            if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({'error': 'Invalid email or password'}), 401
+            flash('Invalid email or password', 'error')
+            return redirect(url_for('login'))
     return render_template('login.html')
 
 @app.route('/register', methods=['POST'])
 def register():
     try:
         data = request.get_json() if request.is_json else request.form
-        username, email, password = data.get('username'), data.get('email'), data.get('password')
-        if not username or not email or not password:
-            return jsonify({'error': 'All fields are required'}), 400
-        if username in users:
-            return jsonify({'error': 'Username already exists'}), 400
-        users[username] = {'password': generate_password_hash(password), 'email': email}
-        return jsonify({'success': True, 'message': 'Registration successful. Please login.',
-                        'redirect': url_for('login')})
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        if not email or not password:
+            return jsonify({'error': 'Email and password are required'}), 400
+        
+        # Create user in Firebase
+        user = auth.create_user(
+            email=email,
+            password=password,
+            display_name=username
+        )
+        return jsonify({
+            'success': True, 
+            'message': 'Registration successful. Please login.',
+            'uid': user.uid,
+            'redirect': url_for('login')
+        })
     except Exception as e:
         return jsonify({'error': f'Registration failed: {str(e)}'}), 500
+
+
 
 @app.route('/logout')
 def logout():

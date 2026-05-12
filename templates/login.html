@@ -431,8 +431,9 @@
                 <form class="sign-in-form" id="sign-in-form">
                     <h2 class="title">Sign in</h2>
                     <div class="input-field">
-                        <i class="fas fa-user"></i>
-                        <input type="text" name="username" placeholder="Username" id="signin-username" required />
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="email" placeholder="Email" id="signin-email" required />
+
                     </div>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
@@ -533,7 +534,8 @@
             }
 
             const formData = {
-                username: document.getElementById('signin-username').value.trim(),
+                email: document.getElementById('signin-email').value.trim(),
+
                 password: document.getElementById('signin-password').value.trim(),
                 csrf_token: csrfToken
             };
@@ -543,7 +545,8 @@
             errorElement.className = 'error-message';
             
             // Client-side validation
-            if (!formData.username || !formData.password) {
+            if (!formData.email || !formData.password) {
+
                 errorElement.textContent = 'Please fill in all fields';
                 return;
             }
@@ -648,7 +651,8 @@
 
                 if (data.success) {
                     container.classList.remove("sign-up-mode");
-                    document.getElementById('signin-username').value = formData.username;
+                    document.getElementById('signin-email').value = formData.email;
+
                     document.getElementById('signin-password').value = formData.password;
                     const loginErr = document.getElementById('login-error');
                     loginErr.textContent = data.message || 'Registration successful! Please sign in.';
